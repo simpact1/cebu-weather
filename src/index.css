@@ -1,0 +1,44 @@
+:root {
+  --bg-deep: #042f2e;
+  --bg-card: rgba(15, 118, 110, 0.35);
+  --bg-card-solid: #0f766e;
+  --text: #ecfeff;
+  --text-muted: #99f6e4;
+  --accent: #fbbf24;
+  --danger: #fb7185;
+  --radius: 1rem;
+  --font: "Noto Sans KR", "DM Sans", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font);
+  color: var(--text);
+  background: linear-gradient(165deg, #042f2e 0%, #0e7490 45%, #155e75 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100dvh;
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
