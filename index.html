@@ -161,9 +161,9 @@
   </head>
   <body>
     <!--
-      FAQ·월별 본문은 <template id="seo-static-source"> 안에 두어 페이지 소스에 그대로 남깁니다.
-      React가 첫 페인트 전에 그 내용을 복제해 #seo-static-slot(날씨관련 여행팁 카드 바로 아래)에 붙입니다.
-      JSON-LD 와 맞출 때 template 안 article 과 head 스크립트를 함께 수정하세요.
+      FAQ·월별 본문은 <article id="seo-static-crawl"> 로 DOM에 직접 두어 크롤러·페이지 소스에서 읽힙니다.
+      화면 순서는 .layout-root flex 의 order 로 #root(앱) → article → 푸터 입니다. display:none 등으로 숨기지 마세요.
+      JSON-LD 와 맞출 때 이 article 과 head 스크립트를 함께 수정하세요.
     -->
     <noscript>
       <p style="margin: 0.75rem; padding: 0.75rem; background: #fef3c7; color: #422006; font-family: system-ui, sans-serif">
@@ -172,9 +172,7 @@
       </p>
     </noscript>
     <div class="layout-root">
-      <div id="root"></div>
-      <template id="seo-static-source">
-        <article id="seo-static-crawl" class="seo-crawl-block" lang="ko">
+      <article id="seo-static-crawl" class="seo-crawl-block" lang="ko">
         <h2 class="seo-crawl-block__title">세부·보홀 날씨 가이드와 자주 묻는 질문</h2>
         <section aria-label="날씨 관련 질문과 답변">
           <dl class="seo-crawl-block__faq">
@@ -253,7 +251,7 @@
           </ul>
         </section>
       </article>
-      </template>
+      <div id="root"></div>
       <div id="footer-portal-root"></div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

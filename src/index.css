@@ -31,7 +31,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 정적 SEO 블록: index.html 에 두고 App 에서 #seo-static-slot 으로 이동 */
+/* layout-root: DOM 순서는 article(크롤러용) → #root → 푸터, 화면은 order 로 앱이 위 */
 .layout-root {
   display: flex;
   flex-direction: column;
@@ -41,6 +41,7 @@ body {
 }
 
 #root {
+  order: 1;
   flex: 1 0 auto;
   min-height: 100dvh;
   width: 100%;
@@ -48,7 +49,15 @@ body {
   overflow-x: clip;
 }
 
+#seo-static-crawl {
+  order: 2;
+  flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
+}
+
 #footer-portal-root {
+  order: 3;
   flex-shrink: 0;
   width: 100%;
   min-width: 0;
@@ -60,7 +69,7 @@ button {
   cursor: pointer;
 }
 
-/* index.html 정적 안내 — 크롤러·noscript 대비 (앱 본문은 #root 안에서 JS로 렌더) */
+/* index.html 정적 FAQ article — 크롤러·화면 하단 노출 (display:none 사용 금지) */
 .seo-crawl-block {
   max-width: 52rem;
   margin: 0 auto;
@@ -123,11 +132,4 @@ button {
   font-weight: 600;
   min-width: 3.25rem;
   display: inline-block;
-}
-
-/* 날씨관련 여행팁 카드 바로 아래로 SEO 블록이 붙는 자리 */
-.seo-static-slot {
-  width: 100%;
-  min-width: 0;
-  margin-top: 0.35rem;
 }

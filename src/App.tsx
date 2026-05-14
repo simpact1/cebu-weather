@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
@@ -158,15 +158,6 @@ export default function App() {
   useEffect(() => {
     void load();
   }, [load]);
-
-  /** template → 슬롯. React가 빈 div로 리셋할 때마다 다시 붙여야 하므로 deps 없이 매 커밋 후 실행 */
-  useLayoutEffect(() => {
-    const slot = document.getElementById("seo-static-slot");
-    const tmpl = document.getElementById("seo-static-source") as HTMLTemplateElement | null;
-    if (!slot || !tmpl?.content) return;
-    slot.replaceChildren();
-    slot.appendChild(tmpl.content.cloneNode(true));
-  });
 
   const footerSlot =
     typeof document !== "undefined" ? document.getElementById("footer-portal-root") : null;
@@ -513,7 +504,6 @@ export default function App() {
             ))}
           </ul>
         </section>
-        <div id="seo-static-slot" className="seo-static-slot" />
       </main>
 
       <style>{`
