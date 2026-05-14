@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# 배포 URL이 바뀌면 sitemap 주소도 함께 수정하세요.
+Sitemap: https://cebu-weather-travel.vercel.app/sitemap.xml

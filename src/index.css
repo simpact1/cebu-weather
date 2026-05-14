@@ -42,3 +42,42 @@ button {
   font: inherit;
   cursor: pointer;
 }
+
+/* index.html 정적 안내 — 크롤러·noscript 대비 (앱 본문은 #root 안에서 JS로 렌더) */
+.seo-crawl-block {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.5rem max(0.75rem, env(safe-area-inset-left)) 2.5rem max(0.75rem, env(safe-area-inset-right));
+  color: rgba(236, 254, 255, 0.88);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border-top: 1px solid rgba(236, 254, 255, 0.12);
+  background: rgba(0, 0, 0, 0.15);
+}
+.seo-crawl-block__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fef9c3;
+}
+.seo-crawl-block h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.9rem;
+  color: #fde68a;
+}
+.seo-crawl-block__faq {
+  margin: 0;
+}
+.seo-crawl-block__faq dt {
+  margin: 0.75rem 0 0.2rem;
+  font-weight: 600;
+  color: #ecfeff;
+}
+.seo-crawl-block__faq dd {
+  margin: 0 0 0.35rem;
+  color: rgba(165, 243, 252, 0.95);
+}
+.seo-crawl-block section p {
+  margin: 0.35rem 0 0;
+  color: rgba(165, 243, 252, 0.95);
+}

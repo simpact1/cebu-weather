@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
+import { SITE_URL_OR_PLACEHOLDER } from "./siteMeta";
+import { SeoCrawlBlock } from "./SeoCrawlBlock";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
   fetchTropicalCycloneBulletins,
@@ -64,6 +66,14 @@ function weekdayShort(isoDate: string): string {
   return new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(d);
 }
 
+function formatFetchedAtManila(iso: string): string {
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Manila",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(iso));
+}
+
 type PlaceOk = {
   ok: true;
   id: string;
@@ -80,6 +90,7 @@ export default function App() {
   const [forecastError, setForecastError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [typhoonImpact7d, setTyphoonImpact7d] = useState<boolean | null>(null);
+  const [lastLoadedAt, setLastLoadedAt] = useState<string | null>(null);
 
   const tourRows = useMemo(() => {
     const map = new Map<string, { current: CurrentWeather; marine: MarineCurrent | null }>();
@@ -140,6 +151,7 @@ export default function App() {
         setForecastError(null);
       }
     } finally {
+      setLastLoadedAt(new Date().toISOString());
       setLoading(false);
     }
   }, []);
@@ -152,8 +164,8 @@ export default function App() {
     <div className="app">
       <header className="hero">
         <p className="eyebrow">Philippines · Cebu</p>
-        <h1>세부 날씨 · 여행</h1>
-        <p className="sub">필리핀 세부.보홀기준 실시간 날씨와 이와관련된 여행팁입니다.</p>
+        <h1>세부날씨 여행팁</h1>
+        <p className="sub">필리핀 세부 보홀기준 실시간 날씨와 관련 여행팁입니다.</p>
         <button type="button" className="refresh" onClick={() => void load()} disabled={loading}>
           {loading ? "불러오는 중…" : "새로고침"}
         </button>
@@ -181,7 +193,7 @@ export default function App() {
       </header>
 
       <main className="grid">
-        <section className="card card-places" aria-live="polite">
+        <section className="card card-places" aria-live="polite" id="today-weather">
           <h2>한눈에 보는 오늘 날씨</h2>
           <p className="muted lead">
             지역별 <strong>기온</strong>, <strong>풍속</strong>, <strong>자외선</strong>, <strong>파도</strong>(유효파고)를 표시합니다. 자외선
@@ -401,7 +413,7 @@ export default function App() {
         </p>
 
         {forecast && (
-          <section className="card" aria-label="세부 7일 예보">
+          <section className="card" aria-label="세부 7일 예보" id="week-forecast">
             <h2>세부 7일 예보</h2>
             <ul className="forecast">
               {forecast.daily.time.map((t, i) => (
@@ -434,7 +446,7 @@ export default function App() {
         )}
 
         <p className="forecast-scall-note" role="note">
-          세부·보홀은 우기에 스콜이라 해서, 굵고 짧게 내리는 비가 야간에 자주 내리기 때문에 비 올 확률이 높습니다. 하루 종일 내리는 것은 아니니 참고하세요.
+          세부·보홀은 우기에 스콜이라 해서, 굵고 짧게 내리는 비가 주로 야간에 자주 내리기 때문에 비 올 확률이 높습니다. 하루 종일 내리는 것은 아니니 참고하세요.
         </p>
 
         <section className="card">
@@ -449,7 +461,7 @@ export default function App() {
           </ul>
         </section>
 
-        <section className="card tips">
+        <section className="card tips" id="travel-tips">
           <h2>날씨관련 여행팁</h2>
           <ul>
             {TRAVEL_TIPS.map((tip) => (
@@ -462,7 +474,27 @@ export default function App() {
         </section>
       </main>
 
+      <SeoCrawlBlock />
+
       <footer className="foot">
+        <section className="foot-sources" aria-label="데이터 출처">
+          <p>
+            <strong>데이터 출처</strong> — 기온·습도·풍속·강수 확률·7일 예보:{" "}
+            <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">
+              Open-Meteo
+            </a>{" "}
+            예보 API. 파도·해수 온도:{" "}
+            <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">
+              Open-Meteo Marine API
+            </a>
+            . 열대성 저기압·태풍 관련 공지 목록은 제3자 캐시 API를 통해 필리핀국립기상청 관련 특보 제목을 참고합니다. 실제 관측·공식 특보와 차이가 날 수 있습니다. 공식 특보는 기관 발표를 확인하세요.
+          </p>
+          <p>
+            <strong>페이지 수치 갱신</strong> — 브라우저에서 마지막으로 불러온 시각(마닐라):{" "}
+            {lastLoadedAt ? formatFetchedAtManila(lastLoadedAt) : "—"} ·{" "}
+            <a href={SITE_URL_OR_PLACEHOLDER}>정식 URL(공유·색인용)</a>
+          </p>
+        </section>
         <p className="foot-partner">
           <span className="foot-partner-label">세부여행플래너</span>
           <a href={PARTNER_LINKS.naverBlog} target="_blank" rel="noopener noreferrer">
@@ -475,7 +507,6 @@ export default function App() {
             카카오톡 채널
           </a>
         </p>
-        <small>교육·개인용 MVP — 상업 이용 시 각 API·콘텐츠 라이선스를 확인하세요.</small>
       </footer>
 
       <style>{`
@@ -804,13 +835,13 @@ export default function App() {
           margin: 0.5rem 0 0.85rem;
         }
         .tour-backup-post-note a {
-          color: #fecaca;
-          font-weight: 600;
+          color: #b91c1c;
+          font-weight: 700;
           text-decoration: underline;
           text-underline-offset: 2px;
         }
         .tour-backup-post-note a:hover {
-          color: #fef2f2;
+          color: #991b1b;
         }
         .places-grid {
           list-style: none;
@@ -1084,6 +1115,37 @@ export default function App() {
           font-size: 0.88rem;
           line-height: 1.55;
           color: var(--text-muted);
+        }
+        .foot-sources {
+          text-align: left;
+          max-width: 40rem;
+          margin: 0 auto 1.25rem;
+          padding: 0.75rem 0.85rem;
+          font-size: 0.72rem;
+          line-height: 1.55;
+          color: rgba(165, 243, 252, 0.9);
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 0.5rem;
+          border: 1px solid rgba(236, 254, 255, 0.1);
+        }
+        .foot-sources p {
+          margin: 0 0 0.5rem;
+        }
+        .foot-sources p:last-child {
+          margin-bottom: 0;
+        }
+        .foot-sources strong {
+          color: #fef9c3;
+          font-weight: 600;
+        }
+        .foot-sources a {
+          color: #a5f3fc;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          word-break: break-all;
+        }
+        .foot-sources a:hover {
+          color: #ecfeff;
         }
         .foot {
           text-align: center;

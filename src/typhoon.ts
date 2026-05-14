@@ -1,4 +1,4 @@
-/** PAGASA 관련 특보 목록 (서드파티 캐시 API). 빈 배열일 수 있음 */
+/** 필리핀국립기상청(PAGASA) 관련 특보 목록 — 제3자 캐시 API. 빈 배열일 수 있음 */
 
 const BULLETINS_URL = "https://sdnpdrrmo.inno.ph/public/weather/pagasa-bulletins";
 

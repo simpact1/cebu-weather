@@ -2,16 +2,122 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
+    <!-- 배포 시: canonical·og:*·JSON-LD·public/robots.txt·sitemap.xml 의 URL을 실제 도메인으로 맞추세요. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0c4a6e" />
-    <meta name="description" content="필리핀 세부 날씨와 여행 정보" />
-    <title>세부 날씨 · 여행</title>
+    <title>세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보</title>
+    <meta
+      name="description"
+      content="필리핀 세부·막탄·보홀 기준 실시간 날씨와 7일 예보, 자외선·파도, 우기·스콜·태풍 시 여행 팁을 한곳에서 확인하세요. 호핑·오슬롭·모알보알 일정을 잡기 전에 날씨를 참고할 수 있는 개인용 가이드입니다."
+    />
+    <meta
+      name="keywords"
+      content="세부 날씨, 세부날씨, 보홀 날씨, 막탄 날씨, 필리핀 날씨, 세부 여행, 보홀 여행, 우기, 태풍, 오슬롭, 모알보알, 실시간 날씨, Open-Meteo"
+    />
+    <link rel="canonical" href="https://cebu-weather-travel.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:title" content="세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보" />
+    <meta
+      property="og:description"
+      content="세부·막탄·보홀 실시간 날씨, 7일 예보, 자외선·파도, 우기·태풍 시 여행 팁. 호핑·오슬롭·모알보알 일정 전 날씨 참고용."
+    />
+    <meta property="og:url" content="https://cebu-weather-travel.vercel.app/" />
+    <meta property="og:image" content="https://cebu-weather-travel.vercel.app/og.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="세부날씨 여행팁 | 세부·보홀 실시간 날씨" />
+    <meta
+      name="twitter:description"
+      content="세부·막탄·보홀 실시간 날씨와 예보, 여행 팁. 우기·태풍·호핑 참고용."
+    />
+    <meta name="twitter:image" content="https://cebu-weather-travel.vercel.app/og.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": "https://cebu-weather-travel.vercel.app/#webpage",
+            "url": "https://cebu-weather-travel.vercel.app/",
+            "name": "세부날씨 여행팁",
+            "description": "필리핀 세부·보홀 기준 실시간 날씨와 관련 여행 팁, 7일 예보, 자외선·파도 안내.",
+            "inLanguage": "ko-KR",
+            "isPartOf": {
+              "@type": "WebSite",
+              "@id": "https://cebu-weather-travel.vercel.app/#website",
+              "url": "https://cebu-weather-travel.vercel.app/",
+              "name": "세부날씨 여행팁"
+            }
+          },
+          {
+            "@type": "TouristDestination",
+            "@id": "https://cebu-weather-travel.vercel.app/#destination-cebu-bohol",
+            "name": "세부 및 보홀 (필리핀 비사야)",
+            "description": "다이빙·호핑·고래상어 관광 등이 인기인 세부(막탄)·보홀 일대. 연중 고온 다습, 6~11월경 태풍·스콜에 유의.",
+            "touristType": ["해외 레저 여행객", "다이버"],
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 9.85,
+              "longitude": 123.75
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://cebu-weather-travel.vercel.app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "세부·보홀 우기는 언제인가요?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "대체로 6~11월에 태풍·열대 저기압의 영향이 잦고, 스콜(짧고 굵은 소나기)이 비교적 자주 옵니다. 일기예보와 해상 특보를 함께 보는 것이 좋습니다."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "고래상어(오슬롭) 투어는 몇 월이 무난한가요?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "운영 정책·바다 상태는 매년 달라질 수 있습니다. 일반적으로 건기(12~5월 전후)에는 파도가 잔잔한 날이 많은 편이나, 당일 풍속·파고를 반드시 확인하세요."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "호핑은 날씨가 어떨 때 비추천인가요?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "비 보다는 강한 바람·높은 파도·태풍·저기압이 가까울 때는 출항이 제한되거나 위험할 수 있습니다. 풍속·유효파고 안내와 현지 업체 판단을 따르세요."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "이 사이트의 날씨 데이터는 어디서 오나요?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "기온·바람·강수 확률 등은 Open-Meteo 예보 API, 파도·해수 온도는 Open-Meteo Marine API를 사용합니다. 태풍 관련 공지 목록은 제3자 캐시 API를 통해 필리핀국립기상청 관련 특보 제목을 참고합니다. 실제 관측·공식 특보와 차이가 날 수 있습니다."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "세부 몇 월에 가면 좋나요?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "건기(대략 12~5월)는 비가 적은 날이 많아 해변·섬 투어에 유리한 경우가 많습니다. 우기(6~11월)는 비가 잦을 수 있으나 가격·혼잡도는 상대적으로 나을 수 있어 취향에 따라 선택하면 됩니다."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
