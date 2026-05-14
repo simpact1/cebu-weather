@@ -31,7 +31,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 정적 SEO 블록은 DOM 순서상 먼저(소스·비 JS 크롤러용), 화면에서는 앱이 위 */
+/* 정적 SEO 블록: index.html 에 두고 App 에서 #seo-static-slot 으로 이동 */
 .layout-root {
   display: flex;
   flex-direction: column;
@@ -41,7 +41,6 @@ body {
 }
 
 #root {
-  order: 1;
   flex: 1 0 auto;
   min-height: 100dvh;
   width: 100%;
@@ -49,9 +48,11 @@ body {
   overflow-x: clip;
 }
 
-#seo-static-crawl {
-  order: 2;
+#footer-portal-root {
   flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 button {
@@ -63,7 +64,7 @@ button {
 .seo-crawl-block {
   max-width: 52rem;
   margin: 0 auto;
-  padding: 1.5rem max(0.75rem, env(safe-area-inset-left)) 2.5rem max(0.75rem, env(safe-area-inset-right));
+  padding: 1.5rem max(0.75rem, env(safe-area-inset-left)) 1rem max(0.75rem, env(safe-area-inset-right));
   color: rgba(236, 254, 255, 0.88);
   font-size: 0.82rem;
   line-height: 1.6;
@@ -96,4 +97,37 @@ button {
 .seo-crawl-block section p {
   margin: 0.35rem 0 0;
   color: rgba(165, 243, 252, 0.95);
+}
+
+.seo-month-intro {
+  margin: 0.35rem 0 0.65rem;
+  color: rgba(165, 243, 252, 0.95);
+}
+
+.seo-month-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.seo-month-list li {
+  margin: 0.4rem 0;
+  padding: 0.35rem 0 0.35rem 0.5rem;
+  border-left: 3px solid rgba(250, 204, 21, 0.45);
+  color: rgba(165, 243, 252, 0.95);
+  line-height: 1.55;
+}
+
+.seo-month-list strong {
+  color: #fef9c3;
+  font-weight: 600;
+  min-width: 3.25rem;
+  display: inline-block;
+}
+
+/* 날씨관련 여행팁 카드 바로 아래로 SEO 블록이 붙는 자리 */
+.seo-static-slot {
+  width: 100%;
+  min-width: 0;
+  margin-top: 0.35rem;
 }

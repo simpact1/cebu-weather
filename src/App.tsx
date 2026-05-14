@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
-import { SITE_URL_OR_PLACEHOLDER } from "./siteMeta";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
   fetchTropicalCycloneBulletins,
@@ -159,8 +159,50 @@ export default function App() {
     void load();
   }, [load]);
 
+  /** template → 슬롯. React가 빈 div로 리셋할 때마다 다시 붙여야 하므로 deps 없이 매 커밋 후 실행 */
+  useLayoutEffect(() => {
+    const slot = document.getElementById("seo-static-slot");
+    const tmpl = document.getElementById("seo-static-source") as HTMLTemplateElement | null;
+    if (!slot || !tmpl?.content) return;
+    slot.replaceChildren();
+    slot.appendChild(tmpl.content.cloneNode(true));
+  });
+
+  const footerSlot =
+    typeof document !== "undefined" ? document.getElementById("footer-portal-root") : null;
+
+  const footerNode = (
+    <footer className="foot">
+      <section className="foot-sources" aria-label="데이터 출처">
+        <p>
+          <strong>데이터 출처</strong> — 기온·습도·풍속·강수 확률·7일 예보:{" "}
+          <span>Open-Meteo</span> 예보 API. 파도·해수 온도:{" "}
+          <span>Open-Meteo Marine API</span>
+          . 열대성 저기압·태풍 관련 공지 목록은 제3자 캐시 API를 통해 필리핀국립기상청 관련 특보 제목을 참고합니다. 실제 관측·공식 특보와 차이가 날 수 있습니다. 공식 특보는 기관 발표를 확인하세요.
+        </p>
+        <p>
+          <strong>페이지 수치 갱신</strong> — 브라우저에서 마지막으로 불러온 시각(마닐라):{" "}
+          {lastLoadedAt ? formatFetchedAtManila(lastLoadedAt) : "—"} · <span>정식 URL(공유·색인용)</span>
+        </p>
+      </section>
+      <p className="foot-partner">
+        <span className="foot-partner-label">세부여행플래너</span>
+        <a href={PARTNER_LINKS.naverBlog} target="_blank" rel="noopener noreferrer">
+          세부여행꿀팁들
+        </a>
+        <span className="foot-dot" aria-hidden>
+          ·
+        </span>
+        <a href={PARTNER_LINKS.kakaoChannel} target="_blank" rel="noopener noreferrer">
+          카카오톡 채널
+        </a>
+      </p>
+    </footer>
+  );
+
   return (
-    <div className="app">
+    <>
+      <div className="app">
       <header className="hero">
         <p className="eyebrow">Philippines · Cebu</p>
         <h1>세부날씨 여행팁</h1>
@@ -307,12 +349,12 @@ export default function App() {
                 <span className="leg-ico" aria-hidden>
                   🔴
                 </span>
-                <span>
-                  <strong>UV 8~10</strong> — 자외선 매우 강함
-                </span>
-                <p className="uv-nested-line">
-                  래쉬가드 추천, 선크림 필수, 오후 야외활동 주의
-                </p>
+                <div className="uv-leg-col">
+                  <p className="uv-leg-main">
+                    <strong>UV 8~10</strong> — 자외선 매우 강함
+                  </p>
+                  <p className="uv-nested-line">래쉬가드 추천, 선크림 필수, 오후 야외활동 주의</p>
+                </div>
               </li>
               <li>
                 <span className="leg-ico" aria-hidden>
@@ -471,40 +513,8 @@ export default function App() {
             ))}
           </ul>
         </section>
+        <div id="seo-static-slot" className="seo-static-slot" />
       </main>
-
-      <footer className="foot">
-        <section className="foot-sources" aria-label="데이터 출처">
-          <p>
-            <strong>데이터 출처</strong> — 기온·습도·풍속·강수 확률·7일 예보:{" "}
-            <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">
-              Open-Meteo
-            </a>{" "}
-            예보 API. 파도·해수 온도:{" "}
-            <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">
-              Open-Meteo Marine API
-            </a>
-            . 열대성 저기압·태풍 관련 공지 목록은 제3자 캐시 API를 통해 필리핀국립기상청 관련 특보 제목을 참고합니다. 실제 관측·공식 특보와 차이가 날 수 있습니다. 공식 특보는 기관 발표를 확인하세요.
-          </p>
-          <p>
-            <strong>페이지 수치 갱신</strong> — 브라우저에서 마지막으로 불러온 시각(마닐라):{" "}
-            {lastLoadedAt ? formatFetchedAtManila(lastLoadedAt) : "—"} ·{" "}
-            <a href={SITE_URL_OR_PLACEHOLDER}>정식 URL(공유·색인용)</a>
-          </p>
-        </section>
-        <p className="foot-partner">
-          <span className="foot-partner-label">세부여행플래너</span>
-          <a href={PARTNER_LINKS.naverBlog} target="_blank" rel="noopener noreferrer">
-            세부여행꿀팁들
-          </a>
-          <span className="foot-dot" aria-hidden>
-            ·
-          </span>
-          <a href={PARTNER_LINKS.kakaoChannel} target="_blank" rel="noopener noreferrer">
-            카카오톡 채널
-          </a>
-        </p>
-      </footer>
 
       <style>{`
         .app {
@@ -512,9 +522,9 @@ export default function App() {
           max-width: 52rem;
           min-width: 0;
           margin: 0 auto;
-          padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 3rem
+          padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 1.25rem
             max(0.75rem, env(safe-area-inset-right));
-          padding-bottom: max(3rem, env(safe-area-inset-bottom));
+          padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
           overflow-wrap: anywhere;
           word-break: break-word;
         }
@@ -724,15 +734,27 @@ export default function App() {
         .uv-legend > ul > li {
           flex-wrap: wrap;
         }
+        .uv-leg-col {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.2rem;
+          min-width: 0;
+          flex: 1;
+        }
+        .uv-leg-main {
+          margin: 0;
+          font-size: inherit;
+          line-height: inherit;
+          color: inherit;
+        }
         .uv-legend .uv-nested {
           flex-basis: 100%;
           margin-left: 1.45rem;
         }
         .uv-nested-line {
-          margin: 0.25rem 0 0.15rem;
-          flex-basis: 100%;
-          margin-left: 1.45rem;
-          padding-left: 1.5rem;
+          margin: 0;
+          padding: 0;
           font-size: 0.72rem;
           line-height: 1.45;
           color: rgba(165, 243, 252, 0.95);
@@ -1146,7 +1168,7 @@ export default function App() {
         }
         .foot {
           text-align: center;
-          margin-top: 2rem;
+          margin-top: 1rem;
           color: rgba(236, 254, 255, 0.55);
         }
         .foot-partner {
@@ -1180,5 +1202,7 @@ export default function App() {
         }
       `}</style>
     </div>
+    {footerSlot ? createPortal(footerNode, footerSlot) : null}
+    </>
   );
 }

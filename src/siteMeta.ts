@@ -9,4 +9,4 @@ export const SITE_URL = (
   .replace(/\/$/, "");
 
 export const SITE_URL_OR_PLACEHOLDER =
-  SITE_URL || "https://cebu-weather-travel.vercel.app";
+  SITE_URL || "https://cebu-planner-weather.vercel.app";
