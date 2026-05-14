@@ -31,11 +31,27 @@ body {
   overflow-x: hidden;
 }
 
+/* 정적 SEO 블록은 DOM 순서상 먼저(소스·비 JS 크롤러용), 화면에서는 앱이 위 */
+.layout-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  min-width: 0;
+}
+
 #root {
+  order: 1;
+  flex: 1 0 auto;
   min-height: 100dvh;
   width: 100%;
   min-width: 0;
   overflow-x: clip;
+}
+
+#seo-static-crawl {
+  order: 2;
+  flex-shrink: 0;
 }
 
 button {

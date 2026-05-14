@@ -120,7 +120,64 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!--
+      크롤러·"페이지 소스 보기"는 JS 실행 전 HTML만 본다.
+      FAQ 본문은 이 정적 블록에 두고, 화면 순서는 .layout-root 의 flex order 로 #root 가 위에 오게 한다.
+      (JSON-LD FAQ 와 문구를 맞출 때 여기와 head 의 script 도 함께 수정하세요.)
+    -->
+    <noscript>
+      <p style="margin: 0.75rem; padding: 0.75rem; background: #fef3c7; color: #422006; font-family: system-ui, sans-serif">
+        이 사이트는 JavaScript로 세부·보홀 실시간 날씨와 예보를 불러옵니다. 브라우저에서 스크립트를 허용해 주세요. 아래에는
+        스크립트 없이도 읽을 수 있는 안내 문구가 이어집니다.
+      </p>
+    </noscript>
+    <div class="layout-root">
+      <article id="seo-static-crawl" class="seo-crawl-block" lang="ko">
+        <h2 class="seo-crawl-block__title">세부·보홀 날씨 가이드와 자주 묻는 질문</h2>
+        <p>
+          필리핀 세부·막탄·보홀 일대의 기온·바람·강수 확률·7일 예보·자외선·파도 등은 브라우저에서 Open-Meteo 예보 API와
+          Marine API를 통해 표시됩니다. 태풍·저기압 관련 안내는 참고용입니다. 공식 관측·특보는 기관 발표를 확인하세요.
+        </p>
+        <section aria-label="날씨 관련 질문과 답변">
+          <dl class="seo-crawl-block__faq">
+            <dt>세부·보홀 우기는 언제인가요?</dt>
+            <dd>
+              대체로 6~11월에 태풍·열대 저기압의 영향이 잦고, 스콜(짧고 굵은 소나기)이 비교적 자주 옵니다. 일기예보와 해상
+              특보를 함께 보는 것이 좋습니다.
+            </dd>
+            <dt>고래상어(오슬롭) 투어는 몇 월이 무난한가요?</dt>
+            <dd>
+              운영 정책·바다 상태는 매년 달라질 수 있습니다. 일반적으로 건기(12~5월 전후)에는 파도가 잔잔한 날이 많은 편이나,
+              당일 풍속·파고를 반드시 확인하세요.
+            </dd>
+            <dt>호핑은 날씨가 어떨 때 비추천인가요?</dt>
+            <dd>
+              비 보다는 강한 바람·높은 파도·태풍·저기압이 가까울 때는 출항이 제한되거나 위험할 수 있습니다. 풍속·유효파고
+              안내와 현지 업체 판단을 따르세요.
+            </dd>
+            <dt>이 사이트의 날씨 데이터는 어디서 오나요?</dt>
+            <dd>
+              기온·바람·강수 확률 등은 Open-Meteo 예보 API(https://open-meteo.com), 파도·해수 온도는 Open-Meteo Marine API를
+              사용합니다. 태풍 관련 공지 목록은 제3자 캐시 API를 통해 필리핀국립기상청 관련 특보 제목을 참고합니다. 실제
+              관측·공식 특보와 차이가 날 수 있습니다.
+            </dd>
+            <dt>세부 몇 월에 가면 좋나요?</dt>
+            <dd>
+              건기(대략 12~5월)는 비가 적은 날이 많아 해변·섬 투어에 유리한 경우가 많습니다. 우기(6~11월)는 비가 잦을 수
+              있으나 가격·혼잡도는 상대적으로 나을 수 있어 취향에 따라 선택하면 됩니다.
+            </dd>
+          </dl>
+        </section>
+        <section aria-labelledby="month-static-h">
+          <h3 id="month-static-h">월별 날씨 느낌(참고)</h3>
+          <p>
+            세부·보홀은 연중 따뜻하고 습도가 높은 편입니다. 1~5월 전후는 비교적 건조한 날이 많고, 6~11월은 소나기·태풍
+            계절에 가깝습니다. 항공·편도 결항, 호핑 취소는 날씨에 따라 생기므로 여유 일정과 보험·환불 규정을 확인하세요.
+          </p>
+        </section>
+      </article>
+      <div id="root"></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

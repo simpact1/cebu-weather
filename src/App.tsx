@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
 import { SITE_URL_OR_PLACEHOLDER } from "./siteMeta";
-import { SeoCrawlBlock } from "./SeoCrawlBlock";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
   fetchTropicalCycloneBulletins,
@@ -473,8 +472,6 @@ export default function App() {
           </ul>
         </section>
       </main>
-
-      <SeoCrawlBlock />
 
       <footer className="foot">
         <section className="foot-sources" aria-label="데이터 출처">
