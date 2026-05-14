@@ -1,0 +1,27 @@
+배포 후 수정 내용이 사이트(링크)에 보이게 하는 방법
+================================================
+
+1) 가장 흔한 방법 — Vercel + GitHub 연동
+----------------------------------------
+• Vercel(https://vercel.com) 로그인 → Add New → Project → GitHub의 이 저장소(날씨어플) 선택
+• 한 번 연결해 두면, 이후 `git push origin main` 할 때마다 Vercel이 자동으로 빌드·배포합니다.
+• 배포가 끝나면 기존 프로덕션 URL(예: xxx.vercel.app)에서 새 내용을 볼 수 있습니다.
+• Git에만 커밋하고 push 하지 않으면, 웹에는 반영되지 않습니다.
+
+2) 로컬에서 바로 올리기
+-----------------------
+• 터미널에서 이 폴더로 이동 후: `npm run deploy`
+• 처음이면 Vercel 로그인·프로젝트 연결 안내가 뜹니다.
+• `vercel` CLI가 없으면 npx로 실행됩니다.
+
+3) GitHub Actions
+-----------------
+• `git push` 할 때마다 빌드만 검증: `.github/workflows/ci.yml` (자동)
+• Vercel에 시크릿을 넣은 뒤 수동 배포: GitHub → Actions → "Vercel 수동 배포" → Run workflow
+  필요 시크릿: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+  (Vercel 대시보드 Git 연동만 쓰는 경우 이 워크플로는 사용하지 않아도 됩니다.)
+
+4) 주의
+-------
+• `index.html`의 canonical·og:url·JSON-LD·`public/sitemap.xml` 등은 실제 배포 도메인에 맞게 바꾸는 것이 좋습니다.
+• `.env`에 `VITE_SITE_URL=https://실제주소` 를 두고 빌드하면 푸터 정식 URL에 반영됩니다.
