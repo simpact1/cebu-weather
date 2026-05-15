@@ -7,9 +7,11 @@ export default defineConfig({
   server: {
     port: 8787,
     strictPort: false,
+    allowedHosts: [".serveousercontent.com", ".loca.lt"],
   },
   preview: {
     port: 8788,
     strictPort: false,
+    allowedHosts: [".serveousercontent.com", ".loca.lt"],
   },
 });
