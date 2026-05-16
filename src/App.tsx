@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import ExternalLink from "./components/ExternalLink";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
@@ -10,7 +11,6 @@ import {
   fetchCurrentWeather,
   fetchForecast,
   fetchMarineCurrent,
-  getUvGuidance,
   weatherEmoji,
   weatherLabel,
   type CurrentWeather,
@@ -18,24 +18,27 @@ import {
   type MarineCurrent,
 } from "./weather";
 
+/** 메인(지역 카드)용 — UV 지수 기준 한 줄만 */
+function getUvMainLabel(uv: number | null): { emoji: string; label: string } | null {
+  if (uv == null || Number.isNaN(uv)) return null;
+  if (uv <= 2) return { emoji: "🟢", label: "안전" };
+  if (uv <= 5) return { emoji: "🟡", label: "선크림 권장" };
+  if (uv <= 7) return { emoji: "🟠", label: "야외활동 주의" };
+  if (uv <= 10) return { emoji: "🔴", label: "자외선 매우 강함" };
+  return { emoji: "🟣", label: "위험" };
+}
+
 function UvGlanceAdvice({ uv }: { uv: number | null }) {
-  const g = getUvGuidance(uv);
-  if (!g) return null;
+  const brief = getUvMainLabel(uv);
+  if (!brief) return null;
   return (
     <div className="g-uv-box">
       <span className="g-uv-main">
         <span className="g-uv-emoji" aria-hidden>
-          {g.emoji}
+          {brief.emoji}
         </span>{" "}
-        {g.title}
+        {brief.label}
       </span>
-      {g.details.length > 0 && (
-        <ul className="g-uv-details">
-          {g.details.map((line) => (
-            <li key={line}>{line}</li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }
@@ -83,7 +86,7 @@ type PlaceOk = {
 type PlaceFail = { ok: false; id: string; name: string; message: string };
 type PlaceResult = PlaceOk | PlaceFail;
 
-export default function App() {
+export function WeatherPage() {
   const [places, setPlaces] = useState<PlaceResult[]>([]);
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [forecastError, setForecastError] = useState<string | null>(null);
@@ -159,6 +162,28 @@ export default function App() {
     void load();
   }, [load]);
 
+  /** iframe·누락된 target 등으로 같은 창 이동하는 외부 링크를 새 탭으로 엽니다. */
+  useEffect(() => {
+    const root = document.querySelector(".app");
+    if (!root) return;
+
+    const onClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement | null)?.closest("a");
+      if (!anchor || !root.contains(anchor)) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+      const external = /^https?:/i.test(href) || href.startsWith("//");
+      if (!external || anchor.target === "_blank") return;
+
+      e.preventDefault();
+      window.open(anchor.href, "_blank", "noopener,noreferrer");
+    };
+
+    root.addEventListener("click", onClick);
+    return () => root.removeEventListener("click", onClick);
+  }, []);
+
   const footerSlot =
     typeof document !== "undefined" ? document.getElementById("footer-portal-root") : null;
 
@@ -178,15 +203,11 @@ export default function App() {
       </section>
       <p className="foot-partner">
         <span className="foot-partner-label">세부여행플래너</span>
-        <a href={PARTNER_LINKS.naverBlog} target="_blank" rel="noopener noreferrer">
-          세부여행꿀팁들
-        </a>
+        <ExternalLink href={PARTNER_LINKS.naverBlog}>세부여행꿀팁들</ExternalLink>
         <span className="foot-dot" aria-hidden>
           ·
         </span>
-        <a href={PARTNER_LINKS.kakaoChannel} target="_blank" rel="noopener noreferrer">
-          카카오톡 채널
-        </a>
+        <ExternalLink href={PARTNER_LINKS.kakaoChannel}>카카오톡 채널</ExternalLink>
       </p>
     </footer>
   );
@@ -204,22 +225,12 @@ export default function App() {
         <div className="partner">
           <p className="partner-title">세부여행플래너</p>
           <nav className="partner-links" aria-label="세부여행플래너 바로가기">
-            <a
-              className="plink plink-naver"
-              href={PARTNER_LINKS.naverBlog}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <ExternalLink className="plink plink-naver" href={PARTNER_LINKS.naverBlog}>
               세부여행꿀팁들
-            </a>
-            <a
-              className="plink plink-kakao"
-              href={PARTNER_LINKS.kakaoChannel}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            </ExternalLink>
+            <ExternalLink className="plink plink-kakao" href={PARTNER_LINKS.kakaoChannel}>
               카카오톡 채널
-            </a>
+            </ExternalLink>
           </nav>
         </div>
       </header>
@@ -438,9 +449,7 @@ export default function App() {
 
         <p className="tour-canyon-note tour-backup-post-note" role="note">
           날씨가 안 좋아 호핑이나 오슬롭·모알보알 투어를 할 수 없는 경우에는{" "}
-          <a href={PARTNER_LINKS.naverBlogTyphoonTourAlternatives} target="_blank" rel="noopener noreferrer">
-            요기
-          </a>
+          <ExternalLink href={PARTNER_LINKS.naverBlogTyphoonTourAlternatives}>요기</ExternalLink>
           를 참고하세요.
         </p>
 

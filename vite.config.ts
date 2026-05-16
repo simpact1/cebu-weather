@@ -7,9 +7,13 @@ export default defineConfig({
   server: {
     port: 8787,
     strictPort: false,
+    /** 반드시 IPv4 로 고정 — localhost 가 ::1 로만 붙으면 연결 실패하는 경우 방지 */
+    host: "127.0.0.1",
+    open: false,
   },
   preview: {
     port: 8788,
     strictPort: false,
+    host: "127.0.0.1",
   },
 });

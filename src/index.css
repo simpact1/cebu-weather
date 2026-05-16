@@ -1,4 +1,17 @@
 :root {
+  /* Shell / dashboard tokens */
+  --shell-bg: #0f1419;
+  --shell-surface: #1a1f26;
+  --shell-border: rgba(255, 255, 255, 0.08);
+  --shell-text: #f1f5f9;
+  --shell-muted: #94a3b8;
+  --accent-green: #22c55e;
+  --accent-orange: #f97316;
+  --accent-blue: #3b82f6;
+  --card-radius: 14px;
+  --shell-header-h: 52px;
+
+  /* Weather page tokens */
   --bg-deep: #042f2e;
   --bg-card: rgba(15, 118, 110, 0.35);
   --bg-card-solid: #0f766e;
@@ -31,7 +44,7 @@ body {
   overflow-x: hidden;
 }
 
-/* layout-root: DOM 순서는 article(크롤러용) → #root → 푸터, 화면은 order 로 앱이 위 */
+/* layout-root: DOM 순서 #root → SEO article → 푸터 (앱이 항상 맨 위에 보임) */
 .layout-root {
   display: flex;
   flex-direction: column;
@@ -41,23 +54,22 @@ body {
 }
 
 #root {
-  order: 1;
   flex: 1 0 auto;
   min-height: 100dvh;
   width: 100%;
   min-width: 0;
   overflow-x: clip;
+  position: relative;
+  z-index: 1;
 }
 
 #seo-static-crawl {
-  order: 2;
   flex-shrink: 0;
   width: 100%;
   min-width: 0;
 }
 
 #footer-portal-root {
-  order: 3;
   flex-shrink: 0;
   width: 100%;
   min-width: 0;

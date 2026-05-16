@@ -161,8 +161,8 @@
   </head>
   <body>
     <!--
-      FAQ·월별 본문은 <article id="seo-static-crawl"> 로 DOM에 직접 두어 크롤러·페이지 소스에서 읽힙니다.
-      화면 순서는 .layout-root flex 의 order 로 #root(앱) → article → 푸터 입니다. display:none 등으로 숨기지 마세요.
+      FAQ·월별 본문은 <article id="seo-static-crawl"> 로 DOM에 두어 크롤러가 읽습니다.
+      화면에서는 #root(React 앱)가 항상 위에 오도록 DOM 순서를 root → article → 푸터 로 둡니다. display:none 등으로 숨기지 마세요.
       JSON-LD 와 맞출 때 이 article 과 head 스크립트를 함께 수정하세요.
     -->
     <noscript>
@@ -172,6 +172,22 @@
       </p>
     </noscript>
     <div class="layout-root">
+      <div id="root">
+        <div
+          style="
+            min-height: 100dvh;
+            margin: 0;
+            padding: 1rem max(1rem, env(safe-area-inset-left)) 1rem max(1rem, env(safe-area-inset-right));
+            font-family: system-ui, sans-serif;
+            font-size: 0.95rem;
+            color: #f1f5f9;
+            background: #0f1419;
+            line-height: 1.5;
+          "
+        >
+          불러오는 중… (<strong>Vite 개발 서버</strong>로 열었는지 확인하세요. <code style="opacity:.85">npm run dev</code>)
+        </div>
+      </div>
       <article id="seo-static-crawl" class="seo-crawl-block" lang="ko">
         <h2 class="seo-crawl-block__title">세부·보홀 날씨 가이드와 자주 묻는 질문</h2>
         <section aria-label="날씨 관련 질문과 답변">
@@ -251,7 +267,6 @@
           </ul>
         </section>
       </article>
-      <div id="root"></div>
       <div id="footer-portal-root"></div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
