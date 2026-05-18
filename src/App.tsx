@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import ExternalLink from "./components/ExternalLink";
+import GuideBriefingCard from "./components/GuideBriefingCard";
 import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
@@ -33,12 +34,10 @@ function UvGlanceAdvice({ uv }: { uv: number | null }) {
   if (!brief) return null;
   return (
     <div className="g-uv-box">
-      <span className="g-uv-main">
-        <span className="g-uv-emoji" aria-hidden>
-          {brief.emoji}
-        </span>{" "}
-        {brief.label}
+      <span className="g-uv-emoji" aria-hidden>
+        {brief.emoji}
       </span>
+      <span className="g-uv-label">{brief.label}</span>
     </div>
   );
 }
@@ -232,6 +231,7 @@ export function WeatherPage() {
               카카오톡 채널
             </ExternalLink>
           </nav>
+          <GuideBriefingCard />
         </div>
       </header>
 
@@ -486,9 +486,20 @@ export function WeatherPage() {
           </section>
         )}
 
-        <p className="forecast-scall-note" role="note">
-          세부·보홀은 우기에 스콜이라 해서, 굵고 짧게 내리는 비가 주로 야간에 자주 내리기 때문에 비 올 확률이 높습니다. 하루 종일 내리는 것은 아니니 참고하세요.
-        </p>
+        <div className="forecast-scall-note" role="note">
+          <p>필리핀 세부 보홀 지역은 우기 시즌에 스콜성 비가 자주 내립니다.</p>
+          <p>
+            스콜은 굵고 강하게 쏟아지지만 짧게 지나가는 비로, 주로 밤이나 새벽 시간대에 내리는 경우가 많습니다.
+          </p>
+          <p>
+            그래서 일기예보에는 비 오는 확률이 높게 표시되는 날이 많지만, 그렇다고 하루 종일 비가 계속 내리는 것은
+            아닙니다.
+          </p>
+          <p>
+            예를 들어 24시간 중 잠깐 5~10분 정도만 비가 내려도 ‘비가 온 날’로 집계되기 때문에, 비올 확률이 높게
+            표시되는 것입니다.
+          </p>
+        </div>
 
         <section className="card">
           <h2>지역별 추천 동선</h2>
@@ -673,6 +684,12 @@ export function WeatherPage() {
           background: rgba(6, 95, 70, 0.28);
           border-radius: 0.55rem;
           border: 1px solid rgba(254, 243, 199, 0.12);
+        }
+        .forecast-scall-note p {
+          margin: 0 0 0.45rem;
+        }
+        .forecast-scall-note p:last-child {
+          margin-bottom: 0;
         }
         .typhoon-one {
           margin: 0;
@@ -951,21 +968,26 @@ export function WeatherPage() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.25rem;
+          justify-content: center;
+          gap: 0.12rem;
           width: 100%;
           text-align: center;
           box-sizing: border-box;
         }
-        .g-uv-main {
-          font-size: 0.62rem;
-          line-height: 1.35;
+        .g-uv-emoji {
+          display: block;
+          font-size: 0.9rem;
+          line-height: 1;
+        }
+        .g-uv-label {
+          display: block;
+          font-size: 0.58rem;
+          line-height: 1.25;
           color: rgba(254, 252, 232, 0.95);
           font-weight: 600;
           overflow-wrap: anywhere;
           text-align: center;
-        }
-        .g-uv-emoji {
-          margin-right: 0.1rem;
+          white-space: pre-line;
         }
         .g-uv-details {
           margin: 0;
