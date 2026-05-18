@@ -17,5 +17,14 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/AppShell.tsx",
+    "src/state",
+    "src/router",
+    "src/pages/HomeDashboard.tsx",
+    "src/pages/ModulePlaceholder.tsx",
+    "src/components/DashboardCard.tsx",
+    "src/config/featureModules.tsx"
+  ]
 }

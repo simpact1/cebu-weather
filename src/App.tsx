@@ -166,7 +166,7 @@ export function WeatherPage() {
     const root = document.querySelector(".app");
     if (!root) return;
 
-    const onClick = (e: MouseEvent) => {
+    const onClick = (e: Event) => {
       const anchor = (e.target as HTMLElement | null)?.closest("a");
       if (!anchor || !root.contains(anchor)) return;
 
