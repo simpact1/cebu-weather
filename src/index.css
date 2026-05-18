@@ -54,8 +54,7 @@ body {
 }
 
 #root {
-  flex: 1 0 auto;
-  min-height: 100dvh;
+  flex-shrink: 0;
   width: 100%;
   min-width: 0;
   overflow-x: clip;
@@ -81,47 +80,68 @@ button {
   cursor: pointer;
 }
 
-/* index.html 정적 FAQ article — 크롤러·화면 하단 노출 (display:none 사용 금지) */
+/* index.html 정적 FAQ·가이드 — 크롤러·화면 하단 (날씨관련 여행팁 카드와 동일 톤) */
 .seo-crawl-block {
   max-width: 52rem;
   margin: 0 auto;
-  padding: 1.5rem max(0.75rem, env(safe-area-inset-left)) 1rem max(0.75rem, env(safe-area-inset-right));
+  padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 1.5rem max(0.75rem, env(safe-area-inset-right));
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 1px solid rgba(236, 254, 255, 0.12);
+}
+
+.seo-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(236, 254, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 1.15rem 1.2rem;
+  min-width: 0;
   color: rgba(236, 254, 255, 0.88);
   font-size: 0.82rem;
   line-height: 1.6;
-  border-top: 1px solid rgba(236, 254, 255, 0.12);
-  background: rgba(0, 0, 0, 0.15);
 }
-.seo-crawl-block__title {
-  margin: 0 0 0.5rem;
+
+.seo-card__title {
+  margin: 0 0 0.85rem;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
+  color: #ccfbf1;
+}
+
+.seo-card__lead {
+  margin: 0;
+  color: rgba(165, 243, 252, 0.95);
+  line-height: 1.6;
+}
+
+.seo-card__lead strong {
   color: #fef9c3;
+  font-weight: 600;
 }
-.seo-crawl-block h3 {
-  margin: 1.25rem 0 0.5rem;
-  font-size: 0.9rem;
-  color: #fde68a;
-}
+
 .seo-crawl-block__faq {
   margin: 0;
 }
+
 .seo-crawl-block__faq dt {
   margin: 0.75rem 0 0.2rem;
   font-weight: 600;
   color: #ecfeff;
 }
+
+.seo-crawl-block__faq dt:first-child {
+  margin-top: 0;
+}
+
 .seo-crawl-block__faq dd {
   margin: 0 0 0.35rem;
   color: rgba(165, 243, 252, 0.95);
 }
-.seo-crawl-block section p {
-  margin: 0.35rem 0 0;
-  color: rgba(165, 243, 252, 0.95);
-}
 
 .seo-month-intro {
-  margin: 0.35rem 0 0.65rem;
+  margin: 0 0 0.65rem;
   color: rgba(165, 243, 252, 0.95);
 }
 
@@ -132,16 +152,25 @@ button {
 }
 
 .seo-month-list li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: 0.5rem;
+  align-items: start;
   margin: 0.4rem 0;
   padding: 0.35rem 0 0.35rem 0.5rem;
   border-left: 3px solid rgba(250, 204, 21, 0.45);
-  color: rgba(165, 243, 252, 0.95);
   line-height: 1.55;
 }
 
 .seo-month-list strong {
   color: #fef9c3;
   font-weight: 600;
-  min-width: 3.25rem;
-  display: inline-block;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.seo-month-list__desc {
+  margin: 0;
+  color: rgba(165, 243, 252, 0.95);
+  min-width: 0;
 }
