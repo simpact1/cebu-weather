@@ -5,39 +5,44 @@
     <!-- 프로덕션: https://cebu-planner-weather.vercel.app — 도메인 변경 시 canonical·og:*·JSON-LD·public/robots.txt·sitemap·VITE_SITE_URL 을 함께 수정 -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0c4a6e" />
-    <title>실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱</title>
+    <title>세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보</title>
     <meta
       name="description"
-      content="현재 위치 기반 실시간 날씨, 기온, 습도, 주간 예보를 깔끔한 디자인으로 제공하는 날씨 안내 서비스입니다."
+      content="세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁을 한곳에서 확인하세요. 7일 예보, 자외선·파도, 우기·태풍 시 여행 참고용."
     />
     <meta
       name="keywords"
-      content="실시간 날씨, 오늘의 날씨, 주간 예보, 기온, 습도, 날씨 앱, 세부 날씨, 보홀 날씨, 필리핀 날씨, 여행 날씨"
+      content="세부 날씨, 세부날씨, 보홀 날씨, 막탄 날씨, 필리핀 날씨, 세부 여행, 보홀 여행, 월별 날씨, 투어 가능, 실시간 날씨, Open-Meteo"
     />
-    <link rel="canonical" href="https://cebu-planner-weather.vercel.app/" />
+    <link rel="canonical" href="https://cebu-planner-weather.vercel.app" />
 
     <!-- Open Graph: 네이버톡·카카오톡 등 메신저 미리보기 -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
-    <meta property="og:site_name" content="실시간 오늘의 날씨" />
-    <meta property="og:title" content="실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱" />
+    <meta property="og:site_name" content="세부날씨 여행팁" />
+    <meta property="og:title" content="세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보" />
     <meta
       property="og:description"
-      content="현재 위치 기반 실시간 날씨, 기온, 습도, 주간 예보를 깔끔한 디자인으로 제공하는 날씨 안내 서비스입니다."
+      content="세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁..."
     />
-    <meta property="og:url" content="https://cebu-planner-weather.vercel.app/" />
-    <meta property="og:image" content="https://cebu-planner-weather.vercel.app/og.svg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱 미리보기" />
+    <meta property="og:url" content="https://cebu-planner-weather.vercel.app" />
+    <meta property="og:image" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
+    <meta property="og:image:secure_url" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="540" />
+    <meta
+      property="og:image:alt"
+      content="필리핀 세부·보홀 실시간 날씨 앱 — 세부날씨 여행팁 대표 이미지"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱" />
+    <meta name="twitter:title" content="세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보" />
     <meta
       name="twitter:description"
-      content="현재 위치 기반 실시간 날씨, 기온, 습도, 주간 예보를 깔끔한 디자인으로 제공하는 날씨 안내 서비스입니다."
+      content="세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁..."
     />
-    <meta name="twitter:image" content="https://cebu-planner-weather.vercel.app/og.svg" />
+    <meta name="twitter:image" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -51,11 +56,17 @@
           {
             "@type": "WebApplication",
             "@id": "https://cebu-planner-weather.vercel.app/#webapplication",
-            "name": "실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱",
+            "name": "세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보",
             "alternateName": "세부날씨 여행팁",
-            "description": "현재 위치 기반 실시간 날씨, 기온, 습도, 주간 예보를 깔끔한 디자인으로 제공하는 날씨 안내 서비스입니다.",
-            "url": "https://cebu-planner-weather.vercel.app/",
-            "image": "https://cebu-planner-weather.vercel.app/og.svg",
+            "description": "세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁을 제공하는 날씨 안내 웹 애플리케이션입니다.",
+            "url": "https://cebu-planner-weather.vercel.app",
+            "image": {
+              "@type": "ImageObject",
+              "url": "https://cebu-planner-weather.vercel.app/images/og-thumbnail.png",
+              "width": 1024,
+              "height": 540,
+              "caption": "필리핀 세부·보홀 실시간 날씨 앱 대표 이미지"
+            },
             "applicationCategory": "WeatherApplication",
             "operatingSystem": "Web Browser",
             "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -67,31 +78,37 @@
               "priceCurrency": "KRW"
             },
             "featureList": [
-              "현재 위치 기반 실시간 날씨",
-              "기온·습도·풍속 표시",
+              "세부·막탄·보홀 실시간 날씨",
+              "월별 날씨 안내",
+              "투어 가능 여부 참고",
               "7일 주간 예보",
-              "자외선·파도·태풍 안내",
-              "세부·보홀 여행 날씨 가이드"
+              "자외선·파도·태풍·여행 팁"
             ],
             "about": {
               "@type": "Thing",
-              "name": "날씨 정보",
-              "description": "실시간 기상 데이터, 예보, 기온, 습도"
+              "name": "필리핀 세부·보홀 날씨 정보",
+              "description": "실시간 기상 데이터, 월별 날씨, 예보, 여행 팁"
             },
             "isPartOf": {
               "@type": "WebSite",
               "@id": "https://cebu-planner-weather.vercel.app/#website",
-              "url": "https://cebu-planner-weather.vercel.app/",
-              "name": "실시간 오늘의 날씨"
+              "url": "https://cebu-planner-weather.vercel.app",
+              "name": "세부날씨 여행팁"
             }
           },
           {
             "@type": "WebPage",
             "@id": "https://cebu-planner-weather.vercel.app/#webpage",
-            "url": "https://cebu-planner-weather.vercel.app/",
-            "name": "실시간 오늘의 날씨 - 이쁜 디자인의 날씨 앱",
-            "description": "현재 위치 기반 실시간 날씨, 기온, 습도, 주간 예보를 깔끔한 디자인으로 제공하는 날씨 안내 서비스입니다.",
+            "url": "https://cebu-planner-weather.vercel.app",
+            "name": "세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보",
+            "description": "세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁...",
             "inLanguage": "ko-KR",
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://cebu-planner-weather.vercel.app/images/og-thumbnail.png",
+              "width": 1024,
+              "height": 540
+            },
             "mainEntity": {
               "@id": "https://cebu-planner-weather.vercel.app/#webapplication"
             },
