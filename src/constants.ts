@@ -1,10 +1,10 @@
 /** Open-Meteo 기준 지역 좌표 (대표 관광·도심 근처) */
 export const WEATHER_PLACES = [
-  { id: "cebu", name: "세부", lat: 10.2926, lon: 123.9022 },
-  { id: "mactan", name: "막탄", lat: 10.3072, lon: 123.9617 },
-  { id: "oslob", name: "오슬롭", lat: 9.5033, lon: 123.4311 },
-  { id: "moalboal", name: "모알보알", lat: 9.4753, lon: 123.3829 },
-  { id: "bohol", name: "보홀", lat: 9.5556, lon: 123.7736 },
+  { id: "cebu", name: "세부시티 실시간 날씨", lat: 10.2926, lon: 123.9022 },
+  { id: "mactan", name: "막탄 날씨", lat: 10.3072, lon: 123.9617 },
+  { id: "oslob", name: "오슬롭 날씨", lat: 9.5033, lon: 123.4311 },
+  { id: "moalboal", name: "모알보알 날씨", lat: 9.4753, lon: 123.3829 },
+  { id: "bohol", name: "보홀 날씨", lat: 9.5556, lon: 123.7736 },
 ] as const;
 
 /** 7일 예보는 세부(시티) 기준 */

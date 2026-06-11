@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import ExternalLink from "./components/ExternalLink";
-import GuideBriefingCard from "./components/GuideBriefingCard";
-import { FORECAST_PLACE, PARTNER_LINKS, SPOTS, TRAVEL_TIPS, WEATHER_PLACES } from "./constants";
+import GdacsSection from "./components/GdacsSection";
+import { FORECAST_PLACE, PARTNER_LINKS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
   fetchTropicalCycloneBulletins,
   hasPhilippinesTropicalImpactWithin7Days,
 } from "./typhoon";
+import { fetchGdacsPhilippineEvents, type GdacsFeature } from "./gdacs";
 import {
   fetchCurrentWeather,
   fetchForecast,
@@ -91,6 +92,8 @@ export function WeatherPage() {
   const [forecastError, setForecastError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [typhoonImpact7d, setTyphoonImpact7d] = useState<boolean | null>(null);
+  const [gdacsData, setGdacsData] = useState<GdacsFeature[]>([]);
+  const [gdacsLoading, setGdacsLoading] = useState(true);
   const [lastLoadedAt, setLastLoadedAt] = useState<string | null>(null);
 
   const tourRows = useMemo(() => {
@@ -161,6 +164,20 @@ export function WeatherPage() {
     void load();
   }, [load]);
 
+  useEffect(() => {
+    setGdacsLoading(true);
+    fetchGdacsPhilippineEvents()
+      .then((features) => {
+        setGdacsData(features);
+      })
+      .catch(() => {
+        setGdacsData([]);
+      })
+      .finally(() => {
+        setGdacsLoading(false);
+      });
+  }, []);
+
   /** iframe·누락된 target 등으로 같은 창 이동하는 외부 링크를 새 탭으로 엽니다. */
   useEffect(() => {
     const root = document.querySelector(".app");
@@ -187,7 +204,23 @@ export function WeatherPage() {
     typeof document !== "undefined" ? document.getElementById("footer-portal-root") : null;
 
   const footerNode = (
-    <footer className="foot">
+    <>
+      <nav className="app-shortcuts" aria-label="세부 여행 앱 바로가기">
+        {[
+          { icon: "📍", label: "가볼만한곳", href: "https://cebu-places-guide.vercel.app", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
+          { icon: "🍽️", label: "맛집", href: "https://project-xj4hg-peach.vercel.app", color: "linear-gradient(135deg, #FF9500, #FF6B00)" },
+          { icon: "🚌", label: "교통", href: "https://project-xj4hg-peach.vercel.app", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
+          { icon: "🗓️", label: "여행일정", href: "https://cebu-planner-home.vercel.app", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
+        ].map((item) => (
+          <ExternalLink key={item.label} href={item.href} className="app-shortcut">
+            <span className="app-shortcut__ico" style={{ background: item.color }} aria-hidden>
+              {item.icon}
+            </span>
+            <span className="app-shortcut__label">{item.label}</span>
+          </ExternalLink>
+        ))}
+      </nav>
+      <footer className="foot">
       <section className="foot-sources" aria-label="데이터 출처">
         <p>
           <strong>데이터 출처</strong> — 기온·습도·풍속·강수 확률·7일 예보:{" "}
@@ -209,15 +242,67 @@ export function WeatherPage() {
         <ExternalLink href={PARTNER_LINKS.kakaoChannel}>카카오톡 채널</ExternalLink>
       </p>
     </footer>
+    </>
   );
 
   return (
     <>
       <div className="app">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "세부·보홀 우기는 언제인가요?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "대체로 6~11월에 태풍·열대 저기압의 영향이 잦고, 스콜이 비교적 자주 옵니다. 일기예보와 해상 특보를 함께 보는 것이 좋습니다.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "세부 몇 월에 가면 좋나요?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "건기(대략 12~5월)는 비가 적은 날이 많아 해변·섬 투어에 유리한 경우가 많습니다. 우기(6~11월)는 비가 잦을 수 있으나 가격·혼잡도는 상대적으로 나을 수 있습니다.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "호핑은 날씨가 어떨 때 비추천인가요?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "강한 바람·높은 파도·태풍·저기압이 가까울 때는 출항이 제한되거나 위험할 수 있습니다. 풍속·유효파고 안내와 현지 업체 판단을 따르세요.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "보홀 페리 결항되기 쉬운 기간은 언제인가요?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "몬순·태풍 외곽·강풍 예보가 발생하는 우기(6~11월)에 결항·지연이 발생할 수 있습니다. 날씨가 안 좋을 때는 전화나 페이스북 등을 통해 결항 여부를 확인하세요.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "세부 자외선은 언제 가장 강한가요?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "적도에 가까워 연중 UV 지수가 높게 나오는 날이 많습니다. 하늘이 흐려도 UV는 남을 수 있어 모자·선크림·한낮 회피를 권장합니다.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <header className="hero">
         <p className="eyebrow">Philippines · Cebu</p>
-        <h1>세부날씨 여행팁</h1>
-        <p className="sub">필리핀 세부 보홀기준 실시간 날씨와 관련 여행팁입니다.</p>
+        <h1>세부·보홀 실시간 날씨·예보 정보</h1>
+        <p className="sub">필리핀 세부·보홀 기준 실시간 날씨와 관련 여행팁입니다. 태풍·지진 정보, 투어 가능 여부, 월별 날씨, 자주 묻는 질문을 한눈에 확인하세요.</p>
         <button type="button" className="refresh" onClick={() => void load()} disabled={loading}>
           {loading ? "불러오는 중…" : "새로고침"}
         </button>
@@ -231,13 +316,77 @@ export function WeatherPage() {
               카카오톡 채널
             </ExternalLink>
           </nav>
-          <GuideBriefingCard />
         </div>
       </header>
 
       <main className="grid">
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "12px",
+          marginBottom: "20px",
+          gridColumn: "1 / -1",
+        }}>
+          {[
+            { icon: "📅", title: "7일 예보", desc: "주간 날씨 흐름", color: "linear-gradient(135deg, #007AFF, #5AC8FA)", targetId: "week-forecast" },
+            { icon: "🌀", title: "태풍 정보", desc: "열대저압대 안내", color: "linear-gradient(135deg, #5856D6, #7B79F7)", targetId: "typhoon" },
+            { icon: "🌋", title: "화산·지진", desc: "GDACS 실시간", color: "linear-gradient(135deg, #FF3B30, #FF6B6B)", targetId: "gdacs" },
+            { icon: "🚤", title: "투어 가능 여부", desc: "호핑·투어 참고", color: "linear-gradient(135deg, #00C7BE, #30D5C8)", targetId: "tour-feasibility" },
+            { icon: "💡", title: "날씨 관련 팁", desc: "여행 날씨 꿀팁", color: "linear-gradient(135deg, #FF9500, #FFCC00)", targetId: "weather-tips" },
+            { icon: "❓", title: "자주 묻는 질문", desc: "날씨 FAQ", color: "linear-gradient(135deg, #34C759, #30D158)", targetId: "faq" },
+          ].map((item) => (
+            <button
+              key={item.title}
+              type="button"
+              onClick={
+                item.title === "자주 묻는 질문"
+                  ? () => document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })
+                  : item.title === "날씨 관련 팁"
+                    ? () => document.getElementById("weather-tips")?.scrollIntoView({ behavior: "smooth" })
+                    : () => document.getElementById(item.targetId)?.scrollIntoView({ behavior: "smooth" })
+              }
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: "16px",
+                padding: "16px 8px 14px",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                color: "#ffffff",
+                fontFamily: "'Noto Sans KR', sans-serif",
+                WebkitAppearance: "none",
+                appearance: "none",
+                boxShadow: "none",
+                outline: "none",
+              }}
+            >
+              <span style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "50%",
+                background: item.color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "26px",
+                marginBottom: "10px",
+                flexShrink: 0,
+              }}>
+                {item.icon}
+              </span>
+              <span style={{ fontSize: "13px", fontWeight: 700, color: "#fff", marginBottom: "4px", lineHeight: 1.3, textAlign: "center" }}>
+                {item.title}
+              </span>
+              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.55)", lineHeight: 1.4, textAlign: "center" }}>
+                {item.desc}
+              </span>
+            </button>
+          ))}
+        </div>
         <section className="card card-places" aria-live="polite" id="today-weather">
-          <h2>한눈에 보는 오늘 날씨</h2>
+          <h2>세부·보홀 오늘 실시간 날씨</h2>
           <p className="muted lead">
             지역별 <strong>기온</strong>, <strong>풍속</strong>, <strong>자외선</strong>, <strong>파도</strong>(유효파고)를 표시합니다. 자외선
             구간별 안내는 각 카드와 아래 <strong>자외선(UV) 안내</strong> 기준을 함께 참고하세요. 파도·해수 온도·UV는 모델 기준이라 실제와 차이가 날 수 있습니다.
@@ -318,8 +467,8 @@ export function WeatherPage() {
           </ul>
         </section>
 
-        <section className="card card-uv-guide">
-          <h2>자외선(UV) 안내</h2>
+        <section className="card card-uv-guide" id="uv-guide">
+          <h2>세부 자외선(UV) 안내</h2>
           <div className="hopping-legend uv-legend" role="region" aria-label="UV 지수 기준">
             <p className="hopping-legend-title">UV 지수 기준</p>
             <ul>
@@ -373,8 +522,56 @@ export function WeatherPage() {
           </div>
         </section>
 
-        <section className="card card-typhoon">
-          <h2>태풍·열대저압대 정보</h2>
+        {forecast && (
+          <section className="card" aria-label="세부 7일 예보" id="week-forecast">
+            <h2>세부 7일 예보</h2>
+            <ul className="forecast">
+              {forecast.daily.time.map((t, i) => (
+                <li key={t} className={i === 0 ? "forecast-today" : undefined}>
+                  <span className="fw-day">
+                    {i === 0 ? "오늘 · " : ""}
+                    {weekdayShort(t)} · {t.slice(5).replace("-", "/")}
+                  </span>
+                  <span className="fw-emoji" title={weatherLabel(forecast.daily.weather_code[i] ?? 0)}>
+                    {weatherEmoji(forecast.daily.weather_code[i] ?? 0)}
+                  </span>
+                  <span className="fw-temps">
+                    {Math.round(forecast.daily.temperature_2m_min[i] ?? 0)}° /{" "}
+                    <strong>{Math.round(forecast.daily.temperature_2m_max[i] ?? 0)}°</strong>
+                  </span>
+                  <span className="fw-rain">
+                    비 올 확률 최대 {forecast.daily.precipitation_probability_max[i] ?? 0}%
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {forecastError && !forecast && (
+          <section className="card" id="week-forecast">
+            <h2>세부 7일 예보</h2>
+            <p className="err">{forecastError}</p>
+          </section>
+        )}
+
+        <div className="forecast-scall-note" role="note">
+          <p>필리핀 세부 보홀 지역은 우기 시즌에 스콜성 비가 자주 내립니다.</p>
+          <p>
+            스콜은 굵고 강하게 쏟아지지만 짧게 지나가는 비로, 주로 밤이나 새벽 시간대에 내리는 경우가 많습니다.
+          </p>
+          <p>
+            그래서 일기예보에는 비 오는 확률이 높게 표시되는 날이 많지만, 그렇다고 하루 종일 비가 계속 내리는 것은
+            아닙니다.
+          </p>
+          <p>
+            예를 들어 24시간 중 잠깐 5~10분 정도만 비가 내려도 ‘비가 온 날’로 집계되기 때문에, 비올 확률이 높게
+            표시되는 것입니다.
+          </p>
+        </div>
+
+        <section className="card card-typhoon" id="typhoon">
+          <h2>세부·필리핀 태풍·열대저압대 정보</h2>
           {loading && typhoonImpact7d === null ? (
             <p className="muted typhoon-one">확인 중…</p>
           ) : (
@@ -388,8 +585,10 @@ export function WeatherPage() {
           )}
         </section>
 
-        <section className="card card-tours">
-          <h2>투어 가능 여부(참고)</h2>
+        <GdacsSection events={gdacsData} loading={gdacsLoading} />
+
+        <section className="card card-tours" id="tour-feasibility">
+          <h2>세부 투어 가능 여부 (호핑·보홀 참고)</h2>
           <p className="muted lead tour-lead">
             <strong>호핑</strong>·<strong>보홀 호핑</strong>은 아래 풍속·파도 구간으로 표시하고, 그 외 투어는 기존
             가능·주의·어려움으로 분류합니다. 실제 운항·안전은 업체·현지 안내가 우선입니다.
@@ -453,77 +652,91 @@ export function WeatherPage() {
           를 참고하세요.
         </p>
 
-        {forecast && (
-          <section className="card" aria-label="세부 7일 예보" id="week-forecast">
-            <h2>세부 7일 예보</h2>
-            <ul className="forecast">
-              {forecast.daily.time.map((t, i) => (
-                <li key={t} className={i === 0 ? "forecast-today" : undefined}>
-                  <span className="fw-day">
-                    {i === 0 ? "오늘 · " : ""}
-                    {weekdayShort(t)} · {t.slice(5).replace("-", "/")}
-                  </span>
-                  <span className="fw-emoji" title={weatherLabel(forecast.daily.weather_code[i] ?? 0)}>
-                    {weatherEmoji(forecast.daily.weather_code[i] ?? 0)}
-                  </span>
-                  <span className="fw-temps">
-                    {Math.round(forecast.daily.temperature_2m_min[i] ?? 0)}° /{" "}
-                    <strong>{Math.round(forecast.daily.temperature_2m_max[i] ?? 0)}°</strong>
-                  </span>
-                  <span className="fw-rain">
-                    비 올 확률 최대 {forecast.daily.precipitation_probability_max[i] ?? 0}%
-                  </span>
-                </li>
+        <section className="card" style={{ gridColumn: "1 / -1" }} id="weather-tips">
+            <h2>날씨 관련 팁</h2>
+
+            <div style={{ marginBottom: "1rem" }}>
+              {[
+                { title: "태풍·우기 시즌", body: "6~11월은 태풍과 소나기가 잦습니다. 날씨 정보를 확인하는 것이 중요합니다." },
+                { title: "자외선·더위", body: "필리핀은 열대 기후라서 자외선이 매우 강합니다. 선크림·모자·선글라스 등을 준비해 오시고 수분 보충은 필수입니다. 피부가 약한 경우 얇은 긴팔을 입는 것도 좋습니다." },
+                { title: "집중호우", body: "갑작스럽게 비가 많이 오는 경우 저지대 지역 침수가 되는 경우도 있습니다. 가급적 외부 활동을 자제하고 이동해야 하는 경우에는 구글 맵 등을 이용해 도로 상태를 확인하는 것이 좋습니다." },
+              ].map((item) => (
+                <div key={item.title} style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", padding: "0.75rem 0" }}>
+                  <p style={{ fontWeight: 700, fontSize: "0.88rem", color: "#fef9c3", margin: "0 0 0.35rem" }}>
+                    · {item.title}
+                  </p>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
+                    {item.body}
+                  </p>
+                </div>
               ))}
-            </ul>
+            </div>
+
+            <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#ccfbf1", margin: "1rem 0 0.5rem" }}>
+              월별 날씨 느낌 (참고, 세부·보홀 일대)
+            </h3>
+            <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "0 0 0.85rem", lineHeight: 1.5 }}>
+              연중 고온 다습이 기본이며, 아래는 일반적인 경향입니다. 연도·태풍 경로에 따라 달라질 수 있으니 출발 전 예보를 확인하세요.
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
+              {[
+                { month: "1월", body: "건기에 가깝고 상대적으로 건조한 날이 많은 편. 아침·저녁은 선선할 수 있음." },
+                { month: "2월", body: "건기, 해변·섬 투어에 유리한 날이 많은 경우가 많음." },
+                { month: "3월", body: "건기 후반, 낮 더위가 뚜렷해지기 시작. 자외선·수분 보충 유의." },
+                { month: "4월", body: "건기, 습도는 상대적으로 낮은 편이라 체감 더위가 강하게 느껴질 수 있음." },
+                { month: "5월", body: "건기 말엽, 소나기가 늘기 시작할 수 있음. 호핑 전 당일 바람 확인." },
+                { month: "6월", body: "우기 시작, 스콜·소나기 빈도 증가. 태풍 시즌 진입에 가까움." },
+                { month: "7월", body: "우기, 강한 소나기·바람 구간이 잦을 수 있음. 페리·항공 지연 여지." },
+                { month: "8월", body: "우기, 태풍 외곽 영향 가능성. 해상 특보·파고 확인 필수." },
+                { month: "9월", body: "우기, 태풍·저기압 통로에 따라 편차 큼. 일정 여유 권장." },
+                { month: "10월", body: "우기 후반까지 이어질 수 있음. 강우·바람 변동에 유의." },
+                { month: "11월", body: "우기 말엽, 태풍 잔향·스콜 가능. 건기 전환기 느낌이 들 수 있음." },
+                { month: "12월", body: "건기로 접어드는 경우가 많아 해변 일정이 무난한 날이 늘어나는 편." },
+              ].map((item) => (
+                <div key={item.month} style={{
+                  background: "rgba(0,0,0,0.18)",
+                  borderRadius: "0.55rem",
+                  padding: "0.55rem 0.65rem",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                }}>
+                  <p style={{ fontWeight: 700, fontSize: "0.82rem", color: "#fef9c3", margin: "0 0 0.25rem" }}>
+                    {item.month}
+                  </p>
+                  <p style={{ fontSize: "0.76rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.5 }}>
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
           </section>
-        )}
-
-        {forecastError && !forecast && (
-          <section className="card">
-            <h2>세부 7일 예보</h2>
-            <p className="err">{forecastError}</p>
+        <section className="card" style={{ gridColumn: "1 / -1", marginTop: "0" }} id="faq">
+            <h2>자주 묻는 질문</h2>
+            {[
+              { q: "세부·보홀 우기는 언제인가요?", a: "대체로 6~11월에 태풍·열대 저기압의 영향이 잦고, 스콜(짧고 굵은 소나기)이 비교적 자주 옵니다. 일기예보와 해상 특보를 함께 보는 것이 좋습니다." },
+              { q: "고래상어(오슬롭) 투어는 몇 월이 무난한가요?", a: "운영 정책·바다 상태는 매년 달라질 수 있습니다. 일반적으로 건기(12~5월 전후)에는 파도가 잔잔한 날이 많은 편이나, 당일 풍속·파고를 반드시 확인하세요." },
+              { q: "호핑은 날씨가 어떨 때 비추천인가요?", a: "비 보다는 강한 바람·높은 파도·태풍·저기압이 가까울 때는 출항이 제한되거나 위험할 수 있습니다. 풍속·유효파고 안내와 현지 업체 판단을 따르세요." },
+              { q: "세부 몇 월에 가면 좋나요?", a: "건기(대략 12~5월)는 비가 적은 날이 많아 해변·섬 투어에 유리한 경우가 많습니다. 우기(6~11월)는 비가 잦을 수 있으나 가격·혼잡도는 상대적으로 나을 수 있어 취향에 따라 선택하면 됩니다." },
+              { q: "세부 몇 월이 제일 더워요?", a: "연중 낮 기온이 30°C 전후에 머무는 날이 많습니다. 건기인 3~5월 전후는 습도가 상대적으로 낮아 체감상 더 뜨겁게 느껴질 수 있고, 6~11월은 습도가 높아 후덥지근한 느낌입니다." },
+              { q: "모알보알 날씨의 특징은 무엇인가요?", a: "남쪽 해안으로 바람이 직접 닿는 날이 많아 세부 시티보다 파도·풍속에 더 민감할 수 있습니다. 캐녀닝·바다거북·정어리떼 스노클링 일정은 풍속·파고 안내가 특히 중요합니다." },
+              { q: "자외선(UV)은 세부에서 언제 가장 강한가요?", a: "적도에 가까워 연중 UV 지수가 높게 나오는 날이 많습니다. 하늘이 흐려도 UV는 남을 수 있어 모자·선크림·한낮 회피를 권장합니다." },
+              { q: "보홀 페리·결항되기 쉬운 기간은 언제인가요?", a: "몬순·태풍 외곽·강풍 예보가 발생하는 우기(6~11월)에 결항·지연이 발생할 수 있습니다. 날씨가 안 좋을 때는 곧바로 항구로 가지 마시고 전화나 페이스북 등을 통해 결항 여부를 확인하세요." },
+              { q: "막탄·세부 시티와 모알보알의 날씨 차이가 나나요?", a: "같은 날에도 해안 방향·지형에 따라 바람·파도·소나기 강도가 다를 수 있습니다. 목적지별로 예보를 나누어 보는 것이 좋습니다." },
+              { q: "건기에도 호핑이 취소될 수 있나요?", a: "가능합니다. 너울·숨은 파도(swell), 현지 해경·업체 판단으로 운항이 제한될 수 있습니다. 예보의 바람·파고와 현장 안내를 함께 따르세요." },
+            ].map((item) => (
+              <div key={item.q} style={{
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+                padding: "0.75rem 0",
+              }}>
+                <p style={{ fontWeight: 700, fontSize: "0.88rem", color: "#fef9c3", margin: "0 0 0.35rem" }}>
+                  Q. {item.q}
+                </p>
+                <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
+                  {item.a}
+                </p>
+              </div>
+            ))}
           </section>
-        )}
-
-        <div className="forecast-scall-note" role="note">
-          <p>필리핀 세부 보홀 지역은 우기 시즌에 스콜성 비가 자주 내립니다.</p>
-          <p>
-            스콜은 굵고 강하게 쏟아지지만 짧게 지나가는 비로, 주로 밤이나 새벽 시간대에 내리는 경우가 많습니다.
-          </p>
-          <p>
-            그래서 일기예보에는 비 오는 확률이 높게 표시되는 날이 많지만, 그렇다고 하루 종일 비가 계속 내리는 것은
-            아닙니다.
-          </p>
-          <p>
-            예를 들어 24시간 중 잠깐 5~10분 정도만 비가 내려도 ‘비가 온 날’로 집계되기 때문에, 비올 확률이 높게
-            표시되는 것입니다.
-          </p>
-        </div>
-
-        <section className="card">
-          <h2>지역별 추천 동선</h2>
-          <ul className="spots">
-            {SPOTS.map((s) => (
-              <li key={s.name}>
-                <strong>{s.name}</strong>
-                <span>{s.note}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="card tips" id="travel-tips">
-          <h2>날씨관련 여행팁</h2>
-          <ul>
-            {TRAVEL_TIPS.map((tip) => (
-              <li key={tip.title}>
-                <h3>{tip.title}</h3>
-                <p>{tip.body}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
       </main>
 
       <style>{`
@@ -534,7 +747,7 @@ export function WeatherPage() {
           margin: 0 auto;
           padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 1.25rem
             max(0.75rem, env(safe-area-inset-right));
-          padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+          padding-bottom: 5rem;
           overflow-wrap: anywhere;
           word-break: break-word;
         }
@@ -635,6 +848,9 @@ export function WeatherPage() {
           .card-typhoon {
             grid-column: 1 / -1;
           }
+          .card-gdacs {
+            grid-column: 1 / -1;
+          }
           .card-tours {
             grid-column: 1 / -1;
           }
@@ -702,6 +918,114 @@ export function WeatherPage() {
         }
         .typhoon-no {
           color: #a7f3d0;
+        }
+        .gdacs-section-title {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin: 0 0 0.35rem;
+        }
+        .gdacs-section-badge {
+          font-size: 0.62rem;
+          font-weight: 600;
+          color: #fff;
+          background: #5856d6;
+          padding: 0.12rem 0.45rem;
+          border-radius: 999px;
+          letter-spacing: 0.03em;
+        }
+        .gdacs-section-sub {
+          font-size: 0.75rem;
+          color: var(--text-muted);
+          margin: 0 0 0.85rem;
+        }
+        .gdacs-loading,
+        .gdacs-empty {
+          margin: 0;
+          font-size: 0.88rem;
+          line-height: 1.5;
+          color: var(--text-muted);
+          text-align: center;
+          padding: 0.75rem 0;
+        }
+        .gdacs-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.65rem;
+        }
+        .gdacs-card {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: rgba(0, 0, 0, 0.22);
+          border: 1px solid rgba(236, 254, 255, 0.1);
+          border-radius: 0.85rem;
+          padding: 0.75rem 0.85rem;
+        }
+        .gdacs-icon {
+          font-size: 1.65rem;
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        .gdacs-card-body {
+          flex: 1;
+          min-width: 0;
+        }
+        .gdacs-card-header {
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          margin-bottom: 0.15rem;
+        }
+        .gdacs-type {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #ccfbf1;
+        }
+        .gdacs-alert {
+          font-size: 0.62rem;
+          font-weight: 600;
+          color: #fff;
+          padding: 0.1rem 0.45rem;
+          border-radius: 999px;
+        }
+        .gdacs-alert-legend {
+          font-size: 10px;
+          color: rgba(255, 255, 255, 0.4);
+          white-space: nowrap;
+        }
+        .gdacs-title {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #ecfeff;
+          margin: 0 0 0.1rem;
+          line-height: 1.4;
+        }
+        .gdacs-direction {
+          font-size: 0.68rem;
+          font-weight: 400;
+          color: rgba(153, 246, 228, 0.75);
+        }
+        .gdacs-meta {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 0.1rem 0;
+          flex-wrap: wrap;
+        }
+        .gdacs-mag {
+          font-size: 0.75rem;
+          color: #fecaca;
+          font-weight: 700;
+        }
+        .gdacs-date {
+          font-size: 0.68rem;
+          color: rgba(153, 246, 228, 0.65);
+          margin: 0;
         }
         .uv-legend .hopping-legend-title {
           margin-bottom: 0.5rem;
@@ -1191,6 +1515,72 @@ export function WeatherPage() {
           text-align: center;
           margin-top: 1rem;
           color: rgba(236, 254, 255, 0.55);
+        }
+        .app-shortcuts {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          z-index: 100;
+          grid-column: 1 / -1;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+          width: 100%;
+          max-width: 52rem;
+          margin: 0 auto;
+          padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+          background: rgba(4, 47, 46, 0.97);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-top: 1px solid rgba(255, 255, 255, 0.12);
+          box-sizing: border-box;
+        }
+        .app-shortcut {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0;
+          padding: 10px 4px;
+          text-decoration: none;
+          color: #ffffff;
+          font-family: "Noto Sans KR", sans-serif;
+          border-radius: 0;
+          background: transparent;
+          border: none;
+          border-right: 1px solid rgba(255, 255, 255, 0.12);
+          transition: background 0.15s ease;
+        }
+        .app-shortcut:last-child {
+          border-right: none;
+        }
+        .app-shortcut:hover {
+          background: rgba(255, 255, 255, 0.08);
+        }
+        .app-shortcut:focus-visible {
+          outline: 2px solid #fef08a;
+          outline-offset: -2px;
+        }
+        .app-shortcut__ico {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 22px;
+          line-height: 1;
+          margin-bottom: 4px;
+          flex-shrink: 0;
+        }
+        .app-shortcut__label {
+          font-size: 12px;
+          font-weight: 700;
+          color: #ffffff;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
         }
         .foot-partner {
           margin: 0 0 0.5rem;

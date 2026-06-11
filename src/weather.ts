@@ -1,4 +1,23 @@
 /** Open-Meteo WMO weather code → 한글 요약 */
+
+const CACHE_TTL = 10 * 60 * 1000; // 10분
+
+const cache = new Map<string, { data: unknown; ts: number }>();
+
+function getCache<T>(key: string): T | null {
+  const hit = cache.get(key);
+  if (!hit) return null;
+  if (Date.now() - hit.ts > CACHE_TTL) {
+    cache.delete(key);
+    return null;
+  }
+  return hit.data as T;
+}
+
+function setCache(key: string, data: unknown): void {
+  cache.set(key, { data, ts: Date.now() });
+}
+
 export function weatherLabel(code: number): string {
   if (code === 0) return "맑음";
   if (code <= 3) return "구름 조금";
@@ -157,16 +176,26 @@ export type CurrentOnlyResponse = {
 };
 
 export async function fetchCurrentWeather(lat: number, lon: number): Promise<CurrentOnlyResponse> {
+  const key = `weather-${lat}-${lon}`;
+  const cached = getCache<CurrentOnlyResponse>(key);
+  if (cached) return cached;
+
   const url = `https://api.open-meteo.com/v1/forecast?${buildCurrentParams(lat, lon).toString()}`;
   const res = await fetchWithRetry(url);
   if (!res.ok) throw new Error(`날씨 API 오류 (${res.status})`);
   const json = (await res.json()) as RawCurrentResponse;
   const uv = uvFromHourly(json.current.time, json.hourly);
   const current: CurrentWeather = { ...json.current, uv_index: uv };
-  return { current };
+  const result = { current };
+  setCache(key, result);
+  return result;
 }
 
 export async function fetchForecast(lat: number, lon: number): Promise<ForecastResponse> {
+  const key = `forecast-${lat}-${lon}`;
+  const cached = getCache<ForecastResponse>(key);
+  if (cached) return cached;
+
   const p = buildCurrentParams(lat, lon);
   p.set(
     "daily",
@@ -184,7 +213,9 @@ export async function fetchForecast(lat: number, lon: number): Promise<ForecastR
   const json = (await res.json()) as RawCurrentResponse & { daily: ForecastResponse["daily"] };
   const uv = uvFromHourly(json.current.time, json.hourly);
   const current: CurrentWeather = { ...json.current, uv_index: uv };
-  return { current, daily: json.daily };
+  const result = { current, daily: json.daily };
+  setCache(key, result);
+  return result;
 }
 
 /** 해양 격자(파도·SST). 연안은 모델 한계가 있을 수 있음 */
@@ -202,6 +233,10 @@ type MarineApiCurrent = {
 };
 
 export async function fetchMarineCurrent(lat: number, lon: number): Promise<MarineCurrent> {
+  const key = `marine-${lat}-${lon}`;
+  const cached = getCache<MarineCurrent>(key);
+  if (cached) return cached;
+
   const params = new URLSearchParams({
     latitude: String(lat),
     longitude: String(lon),
@@ -216,12 +251,16 @@ export async function fetchMarineCurrent(lat: number, lon: number): Promise<Mari
   const json = (await res.json()) as { current?: MarineApiCurrent };
   const c = json.current;
   if (!c) {
-    return { wave_height_m: null, wave_period_s: null, sea_surface_temperature_c: null };
+    const result = { wave_height_m: null, wave_period_s: null, sea_surface_temperature_c: null };
+    setCache(key, result);
+    return result;
   }
-  return {
+  const result = {
     wave_height_m: typeof c.wave_height === "number" ? c.wave_height : null,
     wave_period_s: typeof c.wave_period === "number" ? c.wave_period : null,
     sea_surface_temperature_c:
       typeof c.sea_surface_temperature === "number" ? c.sea_surface_temperature : null,
   };
+  setCache(key, result);
+  return result;
 }
