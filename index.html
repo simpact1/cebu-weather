@@ -17,6 +17,19 @@
     <link rel="canonical" href="https://cebu-planner-weather.vercel.app" />
     <meta name="robots" content="index, follow" />
     <meta name="google-site-verification" content="vtPmTlyiEbB7n-ySqyoV4NpZ51Z6LdEY8rXDLhAo1Go" />
+    <style>
+      .seo-crawl-block {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
 
     <!-- Open Graph: 카카오톡·네이버톡 링크 미리보기 (초기 HTML에 고정 — JS로 덮어쓰지 않음) -->
     <!-- 카카오 캐시 갱신: https://developers.kakao.com/tool/debugger/sharing -->
@@ -87,6 +100,50 @@
               "투어 가능 여부 참고",
               "7일 주간 예보",
               "자외선·파도·태풍·여행 팁"
+            ],
+            "hasPart": [
+              {
+                "@type": "WebApplication",
+                "name": "세부 환율 계산기",
+                "url": "https://cebu-exchange-rate.vercel.app",
+                "description": "필리핀 페소 실시간 환율 계산 및 환전 팁",
+                "applicationCategory": "FinanceApplication"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 맛집 가이드",
+                "url": "https://project-xj4hg-peach.vercel.app",
+                "description": "세부 현지 맛집 추천 및 음식 정보",
+                "applicationCategory": "TravelApplication"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 교통 정보",
+                "url": "https://cebu-traffic-master.vercel.app/",
+                "description": "세부 현지 교통 수단 및 이동 정보 안내",
+                "applicationCategory": "TravelApplication"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 가볼만한곳",
+                "url": "https://cebu-places-guide.vercel.app",
+                "description": "세부 인기 명소 및 관광지 가이드",
+                "applicationCategory": "TravelApplication"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 여행일정 플래너",
+                "url": "https://cebu-travel-schedule.vercel.app/",
+                "description": "세부 여행 일정 자동 생성 및 AI 맞춤 일정 추천",
+                "applicationCategory": "TravelApplication"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 숙소 가이드",
+                "url": "https://cebu-planner-home.vercel.app",
+                "description": "세부 호텔·리조트·풀빌라 비교 및 추천",
+                "applicationCategory": "TravelApplication"
+              }
             ],
             "about": {
               "@type": "Thing",
@@ -217,6 +274,49 @@
                 }
               }
             ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://cebu-planner-weather.vercel.app/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "세부여행플래너",
+                "item": "https://cebu-planner-home.vercel.app"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "세부 날씨",
+                "item": "https://cebu-planner-weather.vercel.app"
+              }
+            ]
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://cebu-planner-home.vercel.app/#organization",
+            "name": "세부여행플래너",
+            "url": "https://cebu-planner-home.vercel.app",
+            "sameAs": [
+              "https://blog.naver.com/aalove0902"
+            ],
+            "description": "필리핀 세부·보홀 여행 정보를 제공하는 한국인 여행 플랫폼입니다. 날씨·환율·맛집·숙소·여행일정 등 세부 여행에 필요한 모든 정보를 제공합니다.",
+            "knowsAbout": [
+              "필리핀 세부 여행"
+            ],
+            "hasPart": [
+              {
+                "@type": "WebApplication",
+                "name": "세부 맛집·교통 가이드",
+                "url": "https://cebu-traffic-master.vercel.app/"
+              },
+              {
+                "@type": "WebApplication",
+                "name": "세부 여행일정 플래너",
+                "url": "https://cebu-travel-schedule.vercel.app/"
+              }
+            ]
           }
         ]
       }
@@ -280,6 +380,46 @@
             <dd>같은 날에도 해안 방향·지형에 따라 바람·파도·소나기 강도가 다를 수 있습니다.</dd>
             <dt>건기에도 호핑이 취소될 수 있나요?</dt>
             <dd>너울·숨은 파도(swell), 현지 해경·업체 판단으로 운항이 제한될 수 있습니다.</dd>
+            <dt>세부 8월 날씨는 어떤가요?</dt>
+            <dd>8월은 우기 한복판으로 태풍 외곽 영향을 받을 수 있습니다. 강한 소나기·바람이 잦고 해상 특보를 꼭 확인하세요.</dd>
+            <dt>세부 9월에 호핑 가능한가요?</dt>
+            <dd>9월은 우기로 태풍·저기압 통로에 따라 편차가 큽니다. 당일 풍속·파고를 반드시 확인하고 업체 안내를 따르세요.</dd>
+            <dt>세부 12월 날씨는 어떤가요?</dt>
+            <dd>12월은 건기로 접어드는 시기로 비가 적은 날이 많아 여행하기 좋습니다. 아침저녁은 상대적으로 선선할 수 있습니다.</dd>
+            <dt>세부 1월 날씨는 어떤가요?</dt>
+            <dd>1월은 건기로 맑은 날이 많고 해변·호핑 투어에 유리합니다. 연중 가장 여행하기 좋은 시기 중 하나입니다.</dd>
+            <dt>세부 우기에 여행 가도 되나요?</dt>
+            <dd>우기(6~11월)에도 여행은 가능합니다. 스콜은 짧고 굵게 지나가는 경우가 많아 하루 종일 비가 오는 것은 아닙니다. 다만 태풍 시즌임을 감안해 일정에 여유를 두세요.</dd>
+            <dt>세부 태풍은 얼마나 자주 오나요?</dt>
+            <dd>필리핀은 연간 20개 내외의 태풍이 발생하며 세부·보홀 지역도 영향을 받을 수 있습니다. 특히 7~10월에 집중되므로 여행 전 기상청 특보를 확인하세요.</dd>
+            <dt>세부 3박5일 여행하기 좋은 계절은?</dt>
+            <dd>건기인 12~5월이 가장 무난합니다. 특히 1~4월은 맑은 날이 많아 호핑·오슬롭·보홀 투어 모두 유리합니다.</dd>
+            <dt>보홀 페리는 비 오면 취소되나요?</dt>
+            <dd>비 자체보다는 강풍·높은 파도가 결항의 주요 원인입니다. 태풍·저기압 접근 시 결항 가능성이 높아지므로 출발 전 페리 회사에 확인하세요.</dd>
+            <dt>세부 스쿠버다이빙 시즌은 언제인가요?</dt>
+            <dd>연중 다이빙이 가능하지만 건기(12~5월)에 시야가 좋은 날이 많습니다. 막탄·모알보알·보홀 모두 인기 다이빙 포인트입니다.</dd>
+            <dt>막탄 공항 날씨와 세부 시티 날씨가 다른가요?</dt>
+            <dd>거리가 가깝지만 소나기는 지역별로 차이가 날 수 있습니다. 공항 날씨가 맑아도 시내는 비가 오거나 그 반대일 수 있습니다.</dd>
+            <dt>세부 반타얀 섬 날씨는 어떤가요?</dt>
+            <dd>반타얀 섬은 세부 북쪽에 위치해 세부 시티와 다소 다른 기상 패턴을 보일 수 있습니다. 건기(12~5월)에 방문하면 맑은 날이 많습니다.</dd>
+            <dt>세부 말라파스쿠아 날씨는 어떤가요?</dt>
+            <dd>세부 최북단에 위치해 태풍 영향을 비교적 직접 받을 수 있습니다. 건기에 방문하면 환도상어·다이빙을 즐기기 좋습니다.</dd>
+            <dt>세부 모알보알 정어리떼 시즌은 언제인가요?</dt>
+            <dd>연중 볼 수 있지만 바다 상태가 좋은 건기(12~5월)에 더 쾌적하게 즐길 수 있습니다. 당일 파고·풍속을 확인하세요.</dd>
+            <dt>세부 오슬롭 날씨가 흐려도 고래상어 투어 가능한가요?</dt>
+            <dd>날씨가 흐려도 파도가 잔잔하면 투어가 가능한 경우가 많습니다. 다만 강풍·높은 파고 시에는 취소될 수 있으니 업체에 확인하세요.</dd>
+            <dt>세부 카모테스 섬 가는 방법과 날씨는?</dt>
+            <dd>막탄이나 올모크에서 페리로 이동합니다. 건기(12~5월)에 날씨가 안정적이고 투명한 바다를 즐기기 좋습니다.</dd>
+            <dt>세부 여행 중 태풍이 오면 어떻게 하나요?</dt>
+            <dd>PAGASA(필리핀 기상청) 특보를 확인하고 숙소 안내를 따르세요. 시그널 1~2 수준이면 실내 활동 위주로 일정을 조정하는 것이 좋습니다.</dd>
+            <dt>세부 바디안 캐녀닝 날씨 주의사항은?</dt>
+            <dd>산악 지형 특성상 기상 변화가 빠릅니다. 상류 강수량에 따라 급류 위험이 있어 업체의 기상 안내를 반드시 따르세요.</dd>
+            <dt>세부 알레그리아 캐녀닝 날씨는?</dt>
+            <dd>남부 지역으로 바디안과 유사한 기상 패턴입니다. 우기에는 수위가 높아질 수 있어 업체 안내가 특히 중요합니다.</dd>
+            <dt>세부에서 선크림은 어떤 SPF를 써야 하나요?</dt>
+            <dd>적도에 가까워 UV 지수가 높으므로 SPF 50+ PA+++ 이상을 권장합니다. 흐린 날에도 자외선은 강하게 내리쬘 수 있습니다.</dd>
+            <dt>세부 여행 중 비가 올 때 실내 활동은?</dt>
+            <dd>SM 몰·아얄라 몰 쇼핑, 세부 시티 역사 투어, 스파·마사지, 현지 레스토랑 탐방 등을 즐길 수 있습니다. 실내 활동으로 일정을 유연하게 조정하세요.</dd>
           </dl>
         </section>
 

@@ -209,8 +209,8 @@ export function WeatherPage() {
         {[
           { icon: "📍", label: "가볼만한곳", href: "https://cebu-places-guide.vercel.app", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
           { icon: "🍽️", label: "맛집", href: "https://project-xj4hg-peach.vercel.app", color: "linear-gradient(135deg, #FF9500, #FF6B00)" },
-          { icon: "🚌", label: "교통", href: "https://project-xj4hg-peach.vercel.app", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
-          { icon: "🗓️", label: "여행일정", href: "https://cebu-planner-home.vercel.app", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
+          { icon: "🚌", label: "교통", href: "https://cebu-traffic-master.vercel.app/", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
+          { icon: "🗓️", label: "여행일정", href: "https://cebu-travel-schedule.vercel.app/", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
         ].map((item) => (
           <ExternalLink key={item.label} href={item.href} className="app-shortcut">
             <span className="app-shortcut__ico" style={{ background: item.color }} aria-hidden>
