@@ -5,8 +5,10 @@ import GdacsSection from "./components/GdacsSection";
 import { FORECAST_PLACE, PARTNER_LINKS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
-  fetchTropicalCycloneBulletins,
-  hasPhilippinesTropicalImpactWithin7Days,
+  formatTyphoonOverlapDate,
+  getPhilippinesTyphoonStatus,
+  type TyphoonImpactDetail,
+  type TyphoonStatus,
 } from "./typhoon";
 import { fetchGdacsPhilippineEvents, type GdacsFeature } from "./gdacs";
 import {
@@ -76,6 +78,67 @@ function formatFetchedAtManila(iso: string): string {
   }).format(new Date(iso));
 }
 
+function TyphoonImpactList({
+  impacts,
+  stale,
+}: {
+  impacts: TyphoonImpactDetail[];
+  stale: boolean;
+}) {
+  return (
+    <div className="typhoon-impacts">
+      {impacts.map((impact) => {
+        const tier = impact.tier ?? "direct";
+        return (
+          <div
+            key={`${impact.eventId ?? impact.eventname}-${impact.episodeId ?? impact.overlapAt}`}
+            className="typhoon-impact-item"
+          >
+            <p className="typhoon-one">
+              {tier === "direct" ? (
+                <>
+                  태풍 <strong className="typhoon-yes">{impact.eventname}</strong>(
+                  {impact.alertlevel})가{" "}
+                  <strong>{formatTyphoonOverlapDate(impact.overlapAt)}</strong> 경 필리핀을 직접 통과할 것으로
+                  예상됩니다.
+                </>
+              ) : (
+                <>
+                  태풍 <strong className="typhoon-yes">{impact.eventname}</strong>(
+                  {impact.alertlevel})가 필리핀을 직접 통과하지 않지만,{" "}
+                  <strong>{formatTyphoonOverlapDate(impact.overlapAt)}</strong> 경 강풍·너울 등 간접 영향이
+                  예상됩니다.
+                </>
+              )}
+            </p>
+            {impact.maxWindKmh != null || impact.severityText ? (
+              <p className="muted typhoon-meta">
+                {impact.maxWindKmh != null ? (
+                  <>
+                    최대 풍속 약 <strong>{impact.maxWindKmh} km/h</strong>
+                  </>
+                ) : null}
+                {impact.maxWindKmh != null && impact.severityText ? " · " : null}
+                {impact.severityText ?? null}
+              </p>
+            ) : null}
+            {impact.reportUrl ? (
+              <p className="typhoon-meta">
+                <ExternalLink href={impact.reportUrl} className="typhoon-report-link">
+                  GDACS 상세 리포트
+                </ExternalLink>
+              </p>
+            ) : null}
+          </div>
+        );
+      })}
+      {stale ? (
+        <p className="muted typhoon-one">(최신 정보 확인 중 지연 — 이전 확인 결과 기준)</p>
+      ) : null}
+    </div>
+  );
+}
+
 type PlaceOk = {
   ok: true;
   id: string;
@@ -91,7 +154,9 @@ export function WeatherPage() {
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [forecastError, setForecastError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [typhoonImpact7d, setTyphoonImpact7d] = useState<boolean | null>(null);
+  const [typhoonStatus, setTyphoonStatus] = useState<TyphoonStatus>("loading");
+  const [typhoonImpacts, setTyphoonImpacts] = useState<TyphoonImpactDetail[]>([]);
+  const [typhoonStale, setTyphoonStale] = useState(false);
   const [gdacsData, setGdacsData] = useState<GdacsFeature[]>([]);
   const [gdacsLoading, setGdacsLoading] = useState(true);
   const [lastLoadedAt, setLastLoadedAt] = useState<string | null>(null);
@@ -108,7 +173,7 @@ export function WeatherPage() {
     setLoading(true);
     setForecastError(null);
     try {
-      const [placeOutcomes, fc, th] = await Promise.all([
+      const [placeOutcomes, fc] = await Promise.all([
         Promise.all(
           WEATHER_PLACES.map(async (p, placeIdx): Promise<PlaceResult> => {
             await new Promise<void>((r) => setTimeout(r, placeIdx * 140));
@@ -140,13 +205,9 @@ export function WeatherPage() {
         fetchForecast(FORECAST_PLACE.lat, FORECAST_PLACE.lon).catch((e: unknown) => ({
           error: e instanceof Error ? e.message : "예보를 불러오지 못했습니다.",
         })),
-        fetchTropicalCycloneBulletins()
-          .then((data) => hasPhilippinesTropicalImpactWithin7Days(data))
-          .catch(() => false),
       ]);
 
       setPlaces(placeOutcomes);
-      setTyphoonImpact7d(th);
       if ("error" in fc) {
         setForecast(null);
         setForecastError(fc.error);
@@ -163,6 +224,23 @@ export function WeatherPage() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    setTyphoonStatus("loading");
+    setTyphoonImpacts([]);
+    getPhilippinesTyphoonStatus()
+      .then((result) => {
+        setTyphoonStatus(result.status);
+        setTyphoonImpacts(result.impacts ?? (result.impact ? [result.impact] : []));
+        setTyphoonStale(result.stale === true);
+      })
+      .catch((e) => {
+        console.error(e);
+        setTyphoonStatus("error");
+        setTyphoonImpacts([]);
+        setTyphoonStale(false);
+      });
+  }, []);
 
   useEffect(() => {
     setGdacsLoading(true);
@@ -208,7 +286,7 @@ export function WeatherPage() {
       <nav className="app-shortcuts" aria-label="세부 여행 앱 바로가기">
         {[
           { icon: "📍", label: "가볼만한곳", href: "https://cebu-places-guide.vercel.app", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
-          { icon: "🍽️", label: "맛집", href: "https://project-xj4hg-peach.vercel.app", color: "linear-gradient(135deg, #FF9500, #FF6B00)" },
+          { icon: "🏨", label: "세부숙소", href: "https://hotel.cebuplanner.com/", color: "linear-gradient(135deg, #f472b6, #db2777)" },
           { icon: "🚌", label: "교통", href: "https://cebu-traffic-master.vercel.app/", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
           { icon: "🗓️", label: "여행일정", href: "https://cebu-travel-schedule.vercel.app/", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
         ].map((item) => (
@@ -306,17 +384,6 @@ export function WeatherPage() {
         <button type="button" className="refresh" onClick={() => void load()} disabled={loading}>
           {loading ? "불러오는 중…" : "새로고침"}
         </button>
-        <div className="partner">
-          <p className="partner-title">세부여행플래너</p>
-          <nav className="partner-links" aria-label="세부여행플래너 바로가기">
-            <ExternalLink className="plink plink-naver" href={PARTNER_LINKS.naverBlog}>
-              세부여행꿀팁들
-            </ExternalLink>
-            <ExternalLink className="plink plink-kakao" href={PARTNER_LINKS.kakaoChannel}>
-              카카오톡 채널
-            </ExternalLink>
-          </nav>
-        </div>
       </header>
 
       <main className="grid">
@@ -572,15 +639,24 @@ export function WeatherPage() {
 
         <section className="card card-typhoon" id="typhoon">
           <h2>세부·필리핀 태풍·열대저압대 정보</h2>
-          {loading && typhoonImpact7d === null ? (
+          {typhoonStatus === "loading" ? (
             <p className="muted typhoon-one">확인 중…</p>
+          ) : (typhoonStatus === "direct" || typhoonStatus === "indirect") &&
+            typhoonImpacts.length > 0 ? (
+            <TyphoonImpactList impacts={typhoonImpacts} stale={typhoonStale} />
+          ) : typhoonStatus === "error" ? (
+            <p className="muted typhoon-one">
+              태풍 정보를 확인할 수 없습니다.{" "}
+              <ExternalLink href="https://bagong.pagasa.dost.gov.ph/">PAGASA</ExternalLink> 공식 사이트에서 직접 확인해
+              주세요.
+            </p>
           ) : (
             <p className="typhoon-one">
               현재 기준 <strong>7일 이내</strong> 필리핀 지역에 영향을 줄 수 있는 태풍·열대저압대는{" "}
-              <strong className={typhoonImpact7d ? "typhoon-yes" : "typhoon-no"}>
-                {typhoonImpact7d ? "있습니다" : "없습니다"}
-              </strong>
-              .
+              <strong className="typhoon-no">없습니다</strong>.
+              {typhoonStale ? (
+                <span className="muted"> (최신 정보 확인 중 지연 — 이전 확인 결과 기준)</span>
+              ) : null}
             </p>
           )}
         </section>
@@ -737,7 +813,7 @@ export function WeatherPage() {
               { q: "세부 말라파스쿠아 날씨는 어떤가요?", a: "세부 최북단에 위치해 태풍 영향을 비교적 직접 받을 수 있습니다. 건기에 방문하면 환도상어·다이빙을 즐기기 좋습니다." },
               { q: "세부 모알보알 정어리떼 시즌은 언제인가요?", a: "연중 볼 수 있지만 바다 상태가 좋은 건기(12~5월)에 더 쾌적하게 즐길 수 있습니다. 당일 파고·풍속을 확인하세요." },
               { q: "세부 오슬롭 날씨가 흐려도 고래상어 투어 가능한가요?", a: "날씨가 흐려도 파도가 잔잔하면 투어가 가능한 경우가 많습니다. 다만 강풍·높은 파고 시에는 취소될 수 있으니 업체에 확인하세요." },
-              { q: "세부 카모테스 섬 가는 방법과 날씨는?", a: "막탄이나 올모크에서 페리로 이동합니다. 건기(12~5월)에 날씨가 안정적이고 투명한 바다를 즐기기 좋습니다." },
+              { q: "세부 카모테스 섬 가는 방법과 날씨는?", a: "다나오 또는 막탄 세부에서 이동이 가능합니다. 다만 막탄과 세부에서는 손님들의 없는 경우 스케줄이 없어지는 경우가 많으니 가급적 다나오항으로 가는 것이 좋고 건기(12~5월)에 날씨가 안정적이고 투명한 바다를 즐기기 좋습니다." },
               { q: "세부 여행 중 태풍이 오면 어떻게 하나요?", a: "PAGASA(필리핀 기상청) 특보를 확인하고 숙소 안내를 따르세요. 시그널 1~2 수준이면 실내 활동 위주로 일정을 조정하는 것이 좋습니다." },
               { q: "세부 바디안 캐녀닝 날씨 주의사항은?", a: "산악 지형 특성상 기상 변화가 빠릅니다. 상류 강수량에 따라 급류 위험이 있어 업체의 기상 안내를 반드시 따르세요." },
               { q: "세부 알레그리아 캐녀닝 날씨는?", a: "남부 지역으로 바디안과 유사한 기상 패턴입니다. 우기에는 수위가 높아질 수 있어 업체 안내가 특히 중요합니다." },
@@ -767,7 +843,7 @@ export function WeatherPage() {
           margin: 0 auto;
           padding: 1.25rem max(0.75rem, env(safe-area-inset-left)) 1.25rem
             max(0.75rem, env(safe-area-inset-right));
-          padding-bottom: 5rem;
+          padding-bottom: 0.75rem;
           overflow-wrap: anywhere;
           word-break: break-word;
         }
@@ -933,6 +1009,30 @@ export function WeatherPage() {
           line-height: 1.55;
           color: #ecfeff;
         }
+        .typhoon-impacts {
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
+        }
+        .typhoon-impact-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+        .typhoon-meta {
+          margin: 0;
+          font-size: 0.8rem;
+          line-height: 1.45;
+          color: rgba(236, 254, 255, 0.78);
+        }
+        #typhoon .typhoon-report-link {
+          color: #fde68a;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+        #typhoon .typhoon-report-link:hover {
+          color: #fff9c4;
+        }
         .typhoon-yes {
           color: #fecaca;
         }
@@ -959,6 +1059,12 @@ export function WeatherPage() {
           font-size: 0.75rem;
           color: var(--text-muted);
           margin: 0 0 0.85rem;
+        }
+        .gdacs-distance-row {
+          white-space: nowrap;
+          font-size: 0.75rem;
+          color: inherit;
+          margin: 2px 0;
         }
         .gdacs-loading,
         .gdacs-empty {
@@ -1503,8 +1609,8 @@ export function WeatherPage() {
         .foot-sources {
           text-align: left;
           max-width: 40rem;
-          margin: 0 auto 1.25rem;
-          padding: 0.75rem 0.85rem;
+          margin: 0 auto 0.3rem;
+          padding: 0.75rem 0.85rem calc(0.75rem + 96px);
           font-size: 0.72rem;
           line-height: 1.55;
           color: rgba(165, 243, 252, 0.9);
@@ -1513,7 +1619,7 @@ export function WeatherPage() {
           border: 1px solid rgba(236, 254, 255, 0.1);
         }
         .foot-sources p {
-          margin: 0 0 0.5rem;
+          margin: 0 0 0.15rem;
         }
         .foot-sources p:last-child {
           margin-bottom: 0;
@@ -1533,7 +1639,7 @@ export function WeatherPage() {
         }
         .foot {
           text-align: center;
-          margin-top: 1rem;
+          margin-top: 0.125rem;
           color: rgba(236, 254, 255, 0.55);
         }
         .app-shortcuts {

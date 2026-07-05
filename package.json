@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/inject-static.mjs",
     "preview": "vite preview",
     "deploy": "npx --yes vercel@latest deploy --prod"
   },
   "dependencies": {
+    "@turf/boolean-intersects": "^7.3.5",
+    "@turf/helpers": "^7.3.5",
+    "@vercel/blob": "^2.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

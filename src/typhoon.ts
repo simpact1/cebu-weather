@@ -1,74 +1,66 @@
-/** 필리핀국립기상청(PAGASA) 관련 특보 목록 — 제3자 캐시 API. 빈 배열일 수 있음 */
+const STALE_AFTER_MS = 40 * 60 * 1000;
 
-const BULLETINS_URL = "https://sdnpdrrmo.inno.ph/public/weather/pagasa-bulletins";
+export type TyphoonStatus = "loading" | "direct" | "indirect" | "no-impact" | "error";
 
-export type TropicalBulletinItem = {
-  name: string;
-  date?: string;
-  file?: string;
-  count?: number;
-  final?: boolean;
+export type TyphoonImpactDetail = {
+  tier?: "direct" | "indirect";
+  eventname: string;
+  alertlevel: string;
+  overlapAt: string;
+  maxWindKmh?: number;
+  severityText?: string;
+  reportUrl?: string;
+  eventId?: number;
+  episodeId?: number;
 };
 
-export type TyphoonFetchResult = {
-  updated_at: string;
-  tropical: TropicalBulletinItem[];
-  rawCount: number;
+export type TyphoonResult = {
+  status: "direct" | "indirect" | "no-impact" | "error";
+  impact?: TyphoonImpactDetail;
+  impacts?: TyphoonImpactDetail[];
+  stale?: boolean;
+  lastChecked?: string | null;
 };
 
-function isTropicalRelated(name: string): boolean {
-  const n = name.toLowerCase();
-  return (
-    n.includes("tropical") ||
-    n.includes("typhoon") ||
-    n.includes("cyclone") ||
-    n.includes("열대") ||
-    n.includes("태풍")
-  );
-}
+type TyphoonApiResponse = {
+  status: TyphoonResult["status"];
+  impact?: TyphoonImpactDetail;
+  impacts?: TyphoonImpactDetail[];
+  lastChecked?: string | null;
+};
 
-export async function fetchTropicalCycloneBulletins(): Promise<TyphoonFetchResult> {
-  const res = await fetch(BULLETINS_URL);
-  if (!res.ok) throw new Error(`특보 목록 API (${res.status})`);
-  const json = (await res.json()) as {
-    success?: boolean;
-    data?: TropicalBulletinItem[];
-    updated_at?: string;
+export async function getPhilippinesTyphoonStatus(): Promise<TyphoonResult> {
+  const res = await fetch("/api/typhoon");
+  if (!res.ok) throw new Error(`Typhoon API (${res.status})`);
+
+  const data = (await res.json()) as TyphoonApiResponse;
+  const impacts = data.impacts ?? (data.impact ? [data.impact] : undefined);
+  const result: TyphoonResult = {
+    status: data.status,
+    impact: data.impact ?? impacts?.[0],
+    impacts,
+    lastChecked: data.lastChecked ?? null,
   };
-  const data = Array.isArray(json.data) ? json.data : [];
-  const tropical = data.filter((d) => d?.name && isTropicalRelated(d.name));
-  return {
-    updated_at: json.updated_at ?? "",
-    tropical,
-    rawCount: data.length,
-  };
-}
 
-/**
- * 특보 항목의 날짜가 마닐라 기준 '오늘부터 7일 이내'에 들어오면 영향 있음.
- * 날짜가 없거나 파싱 불가인 항목이 있으면 보수적으로 영향 있음으로 처리.
- */
-export function hasPhilippinesTropicalImpactWithin7Days(data: TyphoonFetchResult): boolean {
-  if (data.tropical.length === 0) return false;
-
-  const todayStr = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Manila" });
-  const todayMid = Date.parse(`${todayStr}T12:00:00+08:00`);
-  const windowStart = todayMid - 86400000;
-  const windowEnd = todayMid + 7 * 86400000;
-
-  let undated = false;
-  for (const t of data.tropical) {
-    if (!t.date) {
-      undated = true;
-      continue;
+  if (data.lastChecked) {
+    const age = Date.now() - Date.parse(data.lastChecked);
+    if (!Number.isNaN(age) && age > STALE_AFTER_MS) {
+      result.stale = true;
     }
-    const raw = t.date.trim();
-    const ts = Date.parse(raw.length <= 10 ? `${raw}T12:00:00+08:00` : raw);
-    if (Number.isNaN(ts)) {
-      undated = true;
-      continue;
-    }
-    if (ts >= windowStart && ts <= windowEnd) return true;
   }
-  return undated;
+
+  return result;
+}
+
+export function formatTyphoonOverlapDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Manila",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(d);
 }
