@@ -10,6 +10,7 @@ export type TyphoonImpactDetail = {
   maxWindKmh?: number;
   severityText?: string;
   reportUrl?: string;
+  postUrl?: string;
   eventId?: number;
   episodeId?: number;
 };

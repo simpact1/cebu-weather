@@ -326,7 +326,11 @@ export function WeatherPage() {
 
   return (
     <>
-      <TyphoonBanner status={typhoonStatus} typhoonName={typhoonImpacts[0]?.eventname} />
+      <TyphoonBanner
+        status={typhoonStatus}
+        typhoonName={typhoonImpacts[0]?.eventname}
+        postUrl={typhoonImpacts[0]?.postUrl}
+      />
       <div className="app">
       <script
         type="application/ld+json"

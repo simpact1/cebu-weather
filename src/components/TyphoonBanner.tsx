@@ -2,12 +2,10 @@ import type { TyphoonStatus } from "../typhoon";
 
 const FORCE_HIDE_TYPHOON_BANNER = false;
 
-const DIRECT_BANNER_LINK =
-  "https://m.blog.naver.com/PostList.naver?blogId=aalove0902&categoryNo=16";
-
 type TyphoonBannerProps = {
   status: TyphoonStatus;
   typhoonName?: string;
+  postUrl?: string;
 };
 
 function buildBannerText(status: "direct" | "indirect", typhoonName?: string): string {
@@ -22,10 +20,11 @@ function scrollToTyphoonSection() {
   document.getElementById("typhoon")?.scrollIntoView({ behavior: "smooth" });
 }
 
-export default function TyphoonBanner({ status, typhoonName }: TyphoonBannerProps) {
+export default function TyphoonBanner({ status, typhoonName, postUrl }: TyphoonBannerProps) {
   if (FORCE_HIDE_TYPHOON_BANNER) return null;
 
   const bannerTest = new URLSearchParams(window.location.search).get("bannerTest");
+  const bannerPost = new URLSearchParams(window.location.search).get("bannerPost");
   const effectiveStatus: TyphoonStatus =
     bannerTest === "direct" ? "direct" : bannerTest === "indirect" ? "indirect" : status;
   if (
@@ -40,10 +39,12 @@ export default function TyphoonBanner({ status, typhoonName }: TyphoonBannerProp
   const variantClass =
     effectiveStatus === "direct" ? "typhoon-banner--direct" : "typhoon-banner--indirect";
 
+  const effectivePostUrl = bannerPost || postUrl;
+
   const anchorProps =
-    effectiveStatus === "direct"
+    effectiveStatus === "direct" && effectivePostUrl
       ? {
-          href: DIRECT_BANNER_LINK,
+          href: effectivePostUrl,
           target: "_blank" as const,
           rel: "noopener noreferrer",
         }
