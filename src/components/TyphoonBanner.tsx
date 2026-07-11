@@ -3,7 +3,7 @@ import type { TyphoonStatus } from "../typhoon";
 const FORCE_HIDE_TYPHOON_BANNER = false;
 
 const DIRECT_BANNER_LINK =
-  "https://blog.naver.com/PostList.naver?blogId=aalove0902&from=postList&categoryNo=16";
+  "https://m.blog.naver.com/PostList.naver?blogId=aalove0902&categoryNo=16";
 
 type TyphoonBannerProps = {
   status: TyphoonStatus;
