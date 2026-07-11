@@ -23,6 +23,6 @@
 
 4) 주의
 -------
-• 현재 프로덕션 URL 예: https://cebu-planner-weather.vercel.app — `index.html`의 canonical·og:url·JSON-LD·`public/sitemap.xml`·`public/robots.txt`·`src/siteMeta.ts` 기본값·`.env` 의 `VITE_SITE_URL` 을 도메인 변경 시 함께 맞추세요.
+• 현재 프로덕션 URL 예: https://weather.cebuplanner.com — `index.html`의 canonical·og:url·JSON-LD·`public/sitemap.xml`·`public/robots.txt`·`src/siteMeta.ts` 기본값·`.env` 의 `VITE_SITE_URL` 을 도메인 변경 시 함께 맞추세요.
 • `.env`에 `VITE_SITE_URL=https://실제주소` 를 두고 빌드하면 푸터 정식 URL에 반영됩니다.
-• Google Search Console 에 사이트 등록 후 `https://cebu-planner-weather.vercel.app/sitemap.xml` 을 Sitemaps에 제출하면 색인에 도움이 될 수 있습니다. (`public/sitemap.xml`·`public/robots.txt` 는 빌드 시 사이트 루트로 복사됩니다.)
+• Google Search Console 에 사이트 등록 후 `https://weather.cebuplanner.com/sitemap.xml` 을 Sitemaps에 제출하면 색인에 도움이 될 수 있습니다. (`public/sitemap.xml`·`public/robots.txt` 는 빌드 시 사이트 루트로 복사됩니다.)

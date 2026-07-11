@@ -2,7 +2,7 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <!-- 프로덕션: https://cebu-planner-weather.vercel.app — 도메인 변경 시 canonical·og:*·JSON-LD·public/robots.txt·sitemap·VITE_SITE_URL 을 함께 수정 -->
+    <!-- 프로덕션: https://weather.cebuplanner.com — 도메인 변경 시 canonical·og:*·JSON-LD·public/robots.txt·sitemap·VITE_SITE_URL 을 함께 수정 -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0c4a6e" />
     <title>세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보</title>
@@ -14,7 +14,7 @@
       name="keywords"
       content="세부날씨, 보홀날씨, 필리핀날씨, 세부여행, 세부태풍, 세부우기, 세부건기, 세부투어, 호핑투어날씨, 오슬롭날씨, 막탄날씨, 모알보알날씨"
     />
-    <link rel="canonical" href="https://cebu-planner-weather.vercel.app" />
+    <link rel="canonical" href="https://weather.cebuplanner.com" />
     <meta name="robots" content="index, follow" />
     <meta name="google-site-verification" content="vtPmTlyiEbB7n-ySqyoV4NpZ51Z6LdEY8rXDLhAo1Go" />
     <style>
@@ -33,10 +33,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:site_name" content="세부날씨 여행팁" />
-    <meta property="og:url" content="https://cebu-planner-weather.vercel.app" />
+    <meta property="og:url" content="https://weather.cebuplanner.com" />
     <meta property="og:title" content="세부·보홀 실시간 날씨·예보 정보 | 세부여행플래너" />
-    <meta property="og:image" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
-    <meta property="og:image:secure_url" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
+    <meta property="og:image" content="https://weather.cebuplanner.com/images/og-thumbnail.png" />
+    <meta property="og:image:secure_url" content="https://weather.cebuplanner.com/images/og-thumbnail.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1024" />
     <meta property="og:image:height" content="540" />
@@ -48,7 +48,7 @@
       property="og:description"
       content="필리핀 세부·보홀 실시간 날씨, 태풍·지진 정보, 투어 가능 여부, 월별 날씨, 자주 묻는 질문을 한눈에 확인하세요."
     />
-    <link rel="image_src" href="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
+    <link rel="image_src" href="https://weather.cebuplanner.com/images/og-thumbnail.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보" />
@@ -56,7 +56,7 @@
       name="twitter:description"
       content="세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁..."
     />
-    <meta name="twitter:image" content="https://cebu-planner-weather.vercel.app/images/og-thumbnail.png" />
+    <meta name="twitter:image" content="https://weather.cebuplanner.com/images/og-thumbnail.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -69,14 +69,14 @@
         "@graph": [
           {
             "@type": "WebApplication",
-            "@id": "https://cebu-planner-weather.vercel.app/#webapplication",
+            "@id": "https://weather.cebuplanner.com/#webapplication",
             "name": "세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보",
             "alternateName": "세부날씨 여행팁",
             "description": "세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁을 제공하는 날씨 안내 웹 애플리케이션입니다.",
-            "url": "https://cebu-planner-weather.vercel.app",
+            "url": "https://weather.cebuplanner.com",
             "image": {
               "@type": "ImageObject",
-              "url": "https://cebu-planner-weather.vercel.app/images/og-thumbnail.png",
+              "url": "https://weather.cebuplanner.com/images/og-thumbnail.png",
               "width": 1024,
               "height": 540,
               "caption": "필리핀 세부·보홀 실시간 날씨 앱 대표 이미지"
@@ -102,44 +102,50 @@
               {
                 "@type": "WebApplication",
                 "name": "세부 환율 계산기",
-                "url": "https://cebu-exchange-rate.vercel.app",
+                "url": "https://exchange.cebuplanner.com",
                 "description": "필리핀 페소 실시간 환율 계산 및 환전 팁",
-                "applicationCategory": "FinanceApplication"
+                "applicationCategory": "FinanceApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 맛집 가이드",
-                "url": "https://project-xj4hg-peach.vercel.app",
+                "url": "https://cebu-matzip.cebuplanner.com",
                 "description": "세부 현지 맛집 추천 및 음식 정보",
-                "applicationCategory": "TravelApplication"
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 교통 정보",
-                "url": "https://cebu-traffic-master.vercel.app/",
+                "url": "https://transport.cebuplanner.com/",
                 "description": "세부 현지 교통 수단 및 이동 정보 안내",
-                "applicationCategory": "TravelApplication"
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 가볼만한곳",
-                "url": "https://cebu-places-guide.vercel.app",
+                "url": "https://activity.cebuplanner.com",
                 "description": "세부 인기 명소 및 관광지 가이드",
-                "applicationCategory": "TravelApplication"
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 여행일정 플래너",
                 "url": "https://cebu-travel-schedule.vercel.app/",
                 "description": "세부 여행 일정 자동 생성 및 AI 맞춤 일정 추천",
-                "applicationCategory": "TravelApplication"
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 숙소 가이드",
-                "url": "https://cebu-planner-home.vercel.app",
+                "url": "https://hotel.cebuplanner.com/",
                 "description": "세부 호텔·리조트·풀빌라 비교 및 추천",
-                "applicationCategory": "TravelApplication"
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               }
             ],
             "about": {
@@ -149,34 +155,34 @@
             },
             "isPartOf": {
               "@type": "WebSite",
-              "@id": "https://cebu-planner-weather.vercel.app/#website",
-              "url": "https://cebu-planner-weather.vercel.app",
+              "@id": "https://weather.cebuplanner.com/#website",
+              "url": "https://weather.cebuplanner.com",
               "name": "세부날씨 여행팁"
             }
           },
           {
             "@type": "WebPage",
-            "@id": "https://cebu-planner-weather.vercel.app/#webpage",
-            "url": "https://cebu-planner-weather.vercel.app",
+            "@id": "https://weather.cebuplanner.com/#webpage",
+            "url": "https://weather.cebuplanner.com",
             "name": "세부날씨 여행팁 | 필리핀 세부·보홀 실시간 날씨·예보·여행 정보",
             "description": "세부·막탄·보홀 실시간 날씨, 월별 날씨, 투어가능 여부, 세부 날씨 관련 팁...",
             "inLanguage": "ko-KR",
             "primaryImageOfPage": {
               "@type": "ImageObject",
-              "url": "https://cebu-planner-weather.vercel.app/images/og-thumbnail.png",
+              "url": "https://weather.cebuplanner.com/images/og-thumbnail.png",
               "width": 1024,
               "height": 540
             },
             "mainEntity": {
-              "@id": "https://cebu-planner-weather.vercel.app/#webapplication"
+              "@id": "https://weather.cebuplanner.com/#webapplication"
             },
             "isPartOf": {
-              "@id": "https://cebu-planner-weather.vercel.app/#website"
+              "@id": "https://weather.cebuplanner.com/#website"
             }
           },
           {
             "@type": "TouristDestination",
-            "@id": "https://cebu-planner-weather.vercel.app/#destination-cebu-bohol",
+            "@id": "https://weather.cebuplanner.com/#destination-cebu-bohol",
             "name": "세부 및 보홀 (필리핀 비사야)",
             "description": "다이빙·호핑·고래상어 관광 등이 인기인 세부(막탄)·보홀 일대. 연중 고온 다습, 6~11월경 태풍·스콜에 유의.",
             "touristType": ["해외 레저 여행객", "다이버"],
@@ -188,7 +194,7 @@
           },
           {
             "@type": "FAQPage",
-            "@id": "https://cebu-planner-weather.vercel.app/#faq",
+            "@id": "https://weather.cebuplanner.com/#faq",
             "mainEntity": [
               {
                 "@type": "Question",
@@ -274,27 +280,27 @@
           },
           {
             "@type": "BreadcrumbList",
-            "@id": "https://cebu-planner-weather.vercel.app/#breadcrumb",
+            "@id": "https://weather.cebuplanner.com/#breadcrumb",
             "itemListElement": [
               {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "세부여행플래너",
-                "item": "https://cebu-planner-home.vercel.app"
+                "item": "https://cebuplanner.com"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "세부 날씨",
-                "item": "https://cebu-planner-weather.vercel.app"
+                "item": "https://weather.cebuplanner.com"
               }
             ]
           },
           {
             "@type": "Organization",
-            "@id": "https://cebu-planner-home.vercel.app/#organization",
+            "@id": "https://cebuplanner.com/#organization",
             "name": "세부여행플래너",
-            "url": "https://cebu-planner-home.vercel.app",
+            "url": "https://cebuplanner.com",
             "sameAs": [
               "https://blog.naver.com/aalove0902"
             ],
@@ -306,12 +312,16 @@
               {
                 "@type": "WebApplication",
                 "name": "세부 맛집·교통 가이드",
-                "url": "https://cebu-traffic-master.vercel.app/"
+                "url": "https://transport.cebuplanner.com/",
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               },
               {
                 "@type": "WebApplication",
                 "name": "세부 여행일정 플래너",
-                "url": "https://cebu-travel-schedule.vercel.app/"
+                "url": "https://cebu-travel-schedule.vercel.app/",
+                "applicationCategory": "TravelApplication",
+                "operatingSystem": "Web Browser"
               }
             ]
           }
@@ -323,7 +333,7 @@
         "@context": "https://schema.org/",
         "@type": "WebPage",
         "name": "세부 날씨 - 실시간 세부 날씨 정보 | 세부여행플래너",
-        "url": "https://cebu-planner-weather.vercel.app",
+        "url": "https://weather.cebuplanner.com",
         "speakable": {
           "@type": "SpeakableSpecification",
           "cssSelector": [
@@ -338,6 +348,15 @@
           ]
         }
       }
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-38BY0NQ7J1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-38BY0NQ7J1');
     </script>
   </head>
   <body>
@@ -427,7 +446,7 @@
             <dt>세부 오슬롭 날씨가 흐려도 고래상어 투어 가능한가요?</dt>
             <dd>날씨가 흐려도 파도가 잔잔하면 투어가 가능한 경우가 많습니다. 다만 강풍·높은 파고 시에는 취소될 수 있으니 업체에 확인하세요.</dd>
             <dt>세부 카모테스 섬 가는 방법과 날씨는?</dt>
-            <dd>막탄이나 올모크에서 페리로 이동합니다. 건기(12~5월)에 날씨가 안정적이고 투명한 바다를 즐기기 좋습니다.</dd>
+            <dd>다나오 또는 막탄 세부에서 이동이 가능합니다. 다만 막탄과 세부에서는 손님들의 없는 경우 스케줄이 없어지는 경우가 많으니 가급적 다나오항으로 가는 것이 좋고 건기(12~5월)에 날씨가 안정적이고 투명한 바다를 즐기기 좋습니다.</dd>
             <dt>세부 여행 중 태풍이 오면 어떻게 하나요?</dt>
             <dd>PAGASA(필리핀 기상청) 특보를 확인하고 숙소 안내를 따르세요. 시그널 1~2 수준이면 실내 활동 위주로 일정을 조정하는 것이 좋습니다.</dd>
             <dt>세부 바디안 캐녀닝 날씨 주의사항은?</dt>

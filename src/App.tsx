@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import ExternalLink from "./components/ExternalLink";
 import GdacsSection from "./components/GdacsSection";
+import TyphoonBanner from "./components/TyphoonBanner";
 import { FORECAST_PLACE, PARTNER_LINKS, WEATHER_PLACES } from "./constants";
 import { buildTourRows, tourStatusLabel } from "./tourFeasibility";
 import {
@@ -285,9 +286,9 @@ export function WeatherPage() {
     <>
       <nav className="app-shortcuts" aria-label="세부 여행 앱 바로가기">
         {[
-          { icon: "📍", label: "가볼만한곳", href: "https://cebu-places-guide.vercel.app", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
+          { icon: "📍", label: "가볼만한곳", href: "https://activity.cebuplanner.com", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
           { icon: "🏨", label: "세부숙소", href: "https://hotel.cebuplanner.com/", color: "linear-gradient(135deg, #f472b6, #db2777)" },
-          { icon: "🚌", label: "교통", href: "https://cebu-traffic-master.vercel.app/", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
+          { icon: "🚌", label: "교통", href: "https://transport.cebuplanner.com/", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
           { icon: "🗓️", label: "여행일정", href: "https://cebu-travel-schedule.vercel.app/", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
         ].map((item) => (
           <ExternalLink key={item.label} href={item.href} className="app-shortcut">
@@ -325,6 +326,7 @@ export function WeatherPage() {
 
   return (
     <>
+      <TyphoonBanner />
       <div className="app">
       <script
         type="application/ld+json"
