@@ -1,8 +1,6 @@
 import type { TyphoonStatus } from "../typhoon";
 
 const FORCE_HIDE_TYPHOON_BANNER = false;
-const DEV_FORCE_STATUS: TyphoonStatus | null = null;
-// "direct" 또는 "indirect"로 바꾸면 강제 표시. 배포 전 반드시 null로 되돌릴 것.
 
 const DIRECT_BANNER_LINK =
   "https://blog.naver.com/PostList.naver?blogId=aalove0902&from=postList&categoryNo=16";
@@ -27,7 +25,9 @@ function scrollToTyphoonSection() {
 export default function TyphoonBanner({ status, typhoonName }: TyphoonBannerProps) {
   if (FORCE_HIDE_TYPHOON_BANNER) return null;
 
-  const effectiveStatus = DEV_FORCE_STATUS ?? status;
+  const bannerTest = new URLSearchParams(window.location.search).get("bannerTest");
+  const effectiveStatus: TyphoonStatus =
+    bannerTest === "direct" ? "direct" : bannerTest === "indirect" ? "indirect" : status;
   if (
     effectiveStatus === "loading" ||
     effectiveStatus === "no-impact" ||
