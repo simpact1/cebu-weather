@@ -289,7 +289,7 @@ export function WeatherPage() {
           { icon: "📍", label: "가볼만한곳", href: "https://activity.cebuplanner.com", color: "linear-gradient(135deg, #FF2D55, #FF6B8A)" },
           { icon: "🏨", label: "세부숙소", href: "https://hotel.cebuplanner.com/", color: "linear-gradient(135deg, #f472b6, #db2777)" },
           { icon: "🚌", label: "교통", href: "https://transport.cebuplanner.com/", color: "linear-gradient(135deg, #00C7BE, #30D5C8)" },
-          { icon: "🗓️", label: "여행일정", href: "https://cebu-travel-schedule.vercel.app/", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
+          { icon: "🗓️", label: "여행일정", href: "https://schedule.cebuplanner.com/", color: "linear-gradient(135deg, #5856D6, #7B79F7)" },
         ].map((item) => (
           <ExternalLink key={item.label} href={item.href} className="app-shortcut">
             <span className="app-shortcut__ico" style={{ background: item.color }} aria-hidden>
