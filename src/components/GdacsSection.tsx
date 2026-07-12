@@ -87,6 +87,8 @@ export default function GdacsSection({ events, loading }: Props) {
         <span className="gdacs-section-badge">GDACS</span>
       </h2>
       <p className="gdacs-section-sub">최근 30일 기준 · 필리핀 지역 · 최대 5건</p>
+      <p className="gdacs-distance-row">300km 서울 ↔ 대구 정도 거리 · 400km 서울 ↔ 부산 정도 거리</p>
+      <p className="gdacs-distance-row">500km 서울 ↔ 제주시 정도 거리 · 600km 서울 ↔ 후쿠오카 정도 거리</p>
 
       {loading ? (
         <p className="gdacs-loading muted">데이터 불러오는 중...</p>
